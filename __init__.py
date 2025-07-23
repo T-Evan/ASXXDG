@@ -22,6 +22,7 @@ if display.widthPixels != 1080 or display.heightPixels != 1920:
 
 while True:
     system.open("com.zerophil.worldtalk")
+    sleep(0.3)
     reAll = FindColors.find_all(
         "577,828,#F9AA23|585,823,#EA5726|589,833,#D72B0B|599,830,#DE2A13|589,849,#E4261A|587,840,#EF822D", diff=0.9)
     print(reAll)
@@ -38,7 +39,7 @@ while True:
             Toast('点击在线用户')
             tapSleep(re.x - 80, re.y - 150)
             isClick = False
-            for k in range(5):
+            for k in range(6):
                 re = FindColors.find(
                     "362,1624,#26EBD7|326,1654,#26EBD7|393,1661,#26EBD7|362,1687,#26EBD7|355,1664,#26EBD7",
                     rect=[23, 1486, 542, 1903], diff=0.94)
@@ -47,10 +48,29 @@ while True:
                     isClick = True
                     break
                 sleep(0.3)
+
+            isGirl = FindColors.find("110,939,#FF90B2|118,947,#FF90B2|138,960,#FFFFFF|144,968,#FF90B2",
+                                         rect=[7, 556, 350, 1221], diff=0.9)
+            if isGirl:
+                Toast('识别到女生，切换筛选条件')
+                action.Key.back()  # 模拟返回键确认输入
+                sleep(1)
+                re = FindColors.find(
+                    "990,129,#333333|999,128,#333333|1027,120,#333333|993,151,#333333|1022,159,#333333",
+                    rect=[866, 2, 1056, 352], diff=0.92)
+                if re:
+                    Toast('开始筛选')
+                    tapSleep(re.x + 3, re.y + 3, 1.5)
+                    tapSleep(345, 433)  # 点击男生
+                    tapSleep(959, 144)  # 点击确认
+                break
+
             if not isClick:
                 Toast('未进入个人主页/未识别到聊天入口')
                 action.Key.back()  # 模拟返回键确认输入
+                sleep(0.9)
                 continue
+
 
             contentArr = []
             if 功能开关['聊天内容'] != "":
@@ -78,7 +98,7 @@ while True:
                                  rect=[556, 660, 1056, 1908], diff=0.95)
             if re:
                 action.input(content)
-                sleep(0.5)
+                sleep(0.7)
                 tapSleep(re.x + 10, re.y + 10)
                 Toast('发送聊天')
             for m in range(10):
@@ -101,6 +121,11 @@ while True:
         re = FindColors.find("91,1693,#91F6EB|92,1700,#4AEFDE|103,1701,#40EEDC|121,1700,#4AEFDE|111,1693,#333333")
         if re:
             break
+        re = FindColors.find("814,631,#4D426D|834,650,#342463|853,667,#362863|859,631,#4D416F|823,660,#322461", diff=0.92)
+        if re:
+            Toast('关闭弹窗')
+            tapSleep(836, 651)
+
         Toast('返回首页2')
         system.open("com.zerophil.worldtalk")
         action.Key.back()  # 模拟返回键确认输入
@@ -113,7 +138,7 @@ while True:
         sleep(0.5)
 
     Toast('翻页下一屏')
-    tapSleep(267, 149)  # 点击推荐
+    # tapSleep(267, 149)  # 点击推荐
     swipe(551, 1287, 490, 347)
     swipe(551, 1287, 490, 347)
     sleep(2.5)
