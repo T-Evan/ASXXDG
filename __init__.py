@@ -11,134 +11,75 @@ from .res.ui.ui import 功能开关
 
 display = Device.display()
 # 屏幕宽度
-if display.widthPixels != 1080 or display.heightPixels != 1920:
+if display.widthPixels != 720 or display.heightPixels != 1280:
     Toast(f'分辨率为 {display.widthPixels} * {display.heightPixels}，请检查分辨率是否正确')
-    Dialog.confirm("屏幕分辨率不为 1080 * 1920，请重新设置", "分辨率错误")
-    r = system.shell(f"wm size 1080x1920")
-    r = system.shell(f"wm density 480")
+    Dialog.confirm("屏幕分辨率不为 720 * 1280，请重新设置", "分辨率错误")
+    r = system.shell(f"wm size 720x1280")
+    r = system.shell(f"wm density 320")
     display = Device.display()
-    if display.widthPixels != 720 or display.heightPixels != 1280:
-        Dialog.confirm("屏幕分辨率已设置为 1080 * 1920", "分辨率已调整")
+    if display.widthPixels == 720 or display.heightPixels == 1280:
+        Dialog.confirm("屏幕分辨率已设置为 1080 * 1280", "分辨率已调整")
 
 while True:
-    system.open("com.zerophil.worldtalk")
-    sleep(0.3)
-    reAll = FindColors.find_all(
-        "577,828,#F9AA23|585,823,#EA5726|589,833,#D72B0B|599,830,#DE2A13|589,849,#E4261A|587,840,#EF822D", diff=0.9)
-    print(reAll)
-    if reAll:
-        for re in reAll:
-            print(re)
-            online, x, y = imageFind('状态-在线', x1=re.x - 100, y1=re.y - 200, x2=re.x + 80, y2=re.y, confidence1=0.6)
-            if not online:
-                Toast('用户未在线')
-                continue
-            if re.y - 150 < 240:
-                continue  # 避免点击其他分类
+    system.open("hb.menghuan.jizhang")
 
-            Toast('点击在线用户')
-            tapSleep(re.x - 80, re.y - 150)
-            isClick = False
-            for k in range(6):
-                re = FindColors.find(
-                    "362,1624,#26EBD7|326,1654,#26EBD7|393,1661,#26EBD7|362,1687,#26EBD7|355,1664,#26EBD7",
-                    rect=[23, 1486, 542, 1903], diff=0.94)
-                if re:
-                    Toast('进入个人主页')
-                    isClick = True
-                    break
-                sleep(0.3)
+    re = TomatoOcrTap(keyword='战场', x1=33, y1=1224, x2=112, y2=1259, sleep1=2, offsetX=10, offsetY=-20)
+    if re:
+        Toast('进入战场')
 
-            isGirl = FindColors.find("110,939,#FF90B2|118,947,#FF90B2|138,960,#FFFFFF|144,968,#FF90B2",
-                                         rect=[7, 556, 350, 1221], diff=0.9)
-            if isGirl:
-                Toast('识别到女生，切换筛选条件')
-                action.Key.back()  # 模拟返回键确认输入
-                sleep(1)
-                re = FindColors.find(
-                    "990,129,#333333|999,128,#333333|1027,120,#333333|993,151,#333333|1022,159,#333333",
-                    rect=[866, 2, 1056, 352], diff=0.92)
-                if re:
-                    Toast('开始筛选')
-                    tapSleep(re.x + 3, re.y + 3, 1.5)
-                    tapSleep(345, 433)  # 点击男生
-                    tapSleep(959, 144)  # 点击确认
-                break
+    re = FindColors.find("600,1147,#F7D7C5|607,1150,#F7A26B|591,1174,#A56963|587,1193,#9C5D52|612,1195,#BDDBD6",
+                         rect=[475, 907, 674, 1270], diff=0.95)  # 抢夺按钮
+    if not re:
+        re, _, _ = imageFind('前往', 0.9, 82, 222, 674, 1112)
+        if not re:
+            Toast('未进入战场')
+            tapSleep(639, 108, 1.5)  # 空白
+            re = TomatoOcrTap(keyword='重试', x1=322, y1=757, x2=397, y2=804, match_mode='fuzzy')
+            if re:
+                Toast('网络重连')
+            continue
 
-            if not isClick:
-                Toast('未进入个人主页/未识别到聊天入口')
-                action.Key.back()  # 模拟返回键确认输入
-                sleep(0.9)
-                continue
-
-
-            contentArr = []
-            if 功能开关['聊天内容'] != "":
-                contentArr.append(功能开关['聊天内容'])
-            if 功能开关['聊天内容2'] != "":
-                contentArr.append(功能开关['聊天内容2'])
-            if 功能开关['聊天内容3'] != "":
-                contentArr.append(功能开关['聊天内容3'])
-            if 功能开关['聊天内容4'] != "":
-                contentArr.append(功能开关['聊天内容4'])
-            if 功能开关['聊天内容5'] != "":
-                contentArr.append(功能开关['聊天内容5'])
-            if len(contentArr) == 0:
-                Toast('未配置聊天内容')
-                contentArr = ["你好"]
-
-            content = random.choice(contentArr)
-            print(content)
+    Toast('准备抢夺')
+    tapSleep(580, 1174, 2)  # 抢夺
+    re, tmpPoints = imageFindAll('前往', 0.9, 82, 222, 674, 1112)
+    for p in tmpPoints:
+        tapSleep(580, 1174, 2)  # 抢夺
+        Toast('进入抢夺')
+        tapSleep(p['center_x'], p['center_y'], 3.5)
+        for k in range(10):
+            Toast('寻找异兽蛋')
             re = FindColors.find(
-                "362,1624,#26EBD7|326,1654,#26EBD7|393,1661,#26EBD7|362,1687,#26EBD7|355,1664,#26EBD7",
-                rect=[23, 1486, 542, 1903], diff=0.94)
+                "394,607,#E6B26B|404,609,#FFEB9C|393,617,#C57D42|399,617,#DE9E5A|396,654,#8CAEAD|410,654,#7B928C",
+                diff=0.93)
             if re:
-                tapSleep(re.x, re.y)
-            re = FindColors.find("994,899,#333333|1027,883,#333333|1030,918,#333333|997,937,#333333|1013,909,#353535",
-                                 rect=[556, 660, 1056, 1908], diff=0.95)
-            if re:
-                action.input(content)
-                sleep(0.7)
-                tapSleep(re.x + 10, re.y + 10)
-                Toast('发送聊天')
-            for m in range(10):
-                re = FindColors.find(
-                    "91,1693,#91F6EB|92,1700,#4AEFDE|103,1701,#40EEDC|121,1700,#4AEFDE|111,1693,#333333")
+                Toast('点击异兽蛋')
+                tapSleep(re.x, re.y, 1.5)
+                re = imageFindClick('掠夺', sleep1=2)
                 if re:
-                    break
-                Toast('返回首页1')
-                action.Key.back()  # 模拟返回键确认输入
-                system.open("com.zerophil.worldtalk")
-                if m > 8:
-                    Toast('重启应用')
-                    r = system.shell(f"am force-stop com.zerophil.worldtalk")
-                if m > 2:
-                    system.open("com.zerophil.worldtalk")
-                    sleep(2)
-                sleep(0.5)
+                    re, _ = TomatoOcrText(keyword='取', x1=181, y1=1160, x2=232, y2=1210)
+                    if not re:
+                        Toast("无可抢夺资源，跳过")
+                        break
 
-    for m in range(10):
-        re = FindColors.find("91,1693,#91F6EB|92,1700,#4AEFDE|103,1701,#40EEDC|121,1700,#4AEFDE|111,1693,#333333")
-        if re:
-            break
-        re = FindColors.find("814,631,#4D426D|834,650,#342463|853,667,#362863|859,631,#4D416F|823,660,#322461", diff=0.92)
-        if re:
-            Toast('关闭弹窗')
-            tapSleep(836, 651)
+                    Toast('一键上阵')
+                    tapSleep(593, 590, 1.5)
+                    Toast('开始掠夺')
+                    tapSleep(484, 1185, 1.5)  # 开始
+            re = TomatoOcrTap(keyword='取', x1=181, y1=1160, x2=232, y2=1210, sleep1=1)
+            if re:
+                Toast('无可上阵异兽，等待中')
+                sleep(10)
 
-        Toast('返回首页2')
-        system.open("com.zerophil.worldtalk")
-        action.Key.back()  # 模拟返回键确认输入
-        if m > 8:
-            Toast('重启应用')
-            r = system.shell(f"am force-stop com.zerophil.worldtalk")
-        if m > 2:
-            system.open("com.zerophil.worldtalk")
-            sleep(3)
-        sleep(0.5)
+    if len(tmpPoints) == 0:
+        Toast('界面异常，返回首页')
+        tapSleep(639, 108, 1.5)  # 空白
+        tapSleep(19, 91, 1.5)  # 返回
 
-    Toast('翻页下一屏')
-    # tapSleep(267, 149)  # 点击推荐
-    swipe(551, 1287, 490, 347)
-    swipe(551, 1287, 490, 347)
-    sleep(2.5)
+    re = FindColors.find("600,1147,#F7D7C5|607,1150,#F7A26B|591,1174,#A56963|587,1193,#9C5D52|612,1195,#BDDBD6",
+                         rect=[475, 907, 674, 1270], diff=0.95)  # 抢夺按钮
+    if re:
+        Toast('刷新抢夺')
+        tapSleep(580, 1174, 2)  # 抢夺
+    re = TomatoOcrTap(keyword='免费', x1=508, y1=310, x2=595, y2=344, match_mode='fuzzy')
+    if re:
+        Toast('免费刷新')
