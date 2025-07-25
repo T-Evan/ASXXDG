@@ -20,7 +20,10 @@ if display.widthPixels != 720 or display.heightPixels != 1280:
     if display.widthPixels == 720 or display.heightPixels == 1280:
         Dialog.confirm("屏幕分辨率已设置为 1080 * 1280", "分辨率已调整")
 
+startTime = time.time()
 while True:
+    自动合成()
+
     system.open("hb.menghuan.jizhang")
 
     re = TomatoOcrTap(keyword='战场', x1=33, y1=1224, x2=112, y2=1259, sleep1=2, offsetX=10, offsetY=-20)
@@ -86,3 +89,34 @@ while True:
     re = TomatoOcrTap(keyword='免费', x1=508, y1=310, x2=595, y2=344, match_mode='fuzzy')
     if re:
         Toast('免费刷新')
+
+    currTime = time.time()
+    waitTIme = currTime - startTime
+    waitTImeMin = round(waitTIme / 60, 2)
+
+    # 开始一键合成
+    if waitTIme > 30:
+        startTime = currTime
+        Toast(f'已运行{waitTImeMin}/30分，前往一键合成')
+        自动合成()
+
+    Toast(f'已运行{waitTImeMin}/30分，等待前往一键合成')
+    sleep(2)
+
+    def 自动合成():
+        for k in range(5):
+            re = FindColors.find("12,48,#CE7D73|42,50,#DE9284|22,66,#F7EBB5|28,77,#E6BE94|52,78,#DE968C",
+                                 rect=[3, 4, 270, 255], diff=0.93)
+            if re:
+                Toast('返回主页')
+                tapSleep(re.x, re.y, 2)
+            re, _ = TomatoOcrText(keyword='战场', x1=33, y1=1224, x2=112, y2=1259)
+            if re:
+                Toast('已返回主页')
+                break
+        re = TomatoOcrTap(keyword='自动合成', x1=23, y1=839, x2=121, y2=868, sleep1=2, offsetX=10, offsetY=-20)
+        if re:
+            re = TomatoOcrTap(keyword='合成', match_mode='fuzzy', x1=525, y1=935, x2=622, y2=965, sleep1=2, offsetX=5)
+            if not re:
+                Toast('未找到一键合成按钮')
+                return
