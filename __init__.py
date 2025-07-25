@@ -51,6 +51,9 @@ while True:
             re = FindColors.find(
                 "394,607,#E6B26B|404,609,#FFEB9C|393,617,#C57D42|399,617,#DE9E5A|396,654,#8CAEAD|410,654,#7B928C",
                 diff=0.9)
+            if not re:
+                re = FindColors.find("505,640,#AD5D31|511,632,#EFBA73|513,640,#C58642|522,642,#C58242|521,626,#FFEFD6",
+                                     diff=0.9)
             if re:
                 Toast('点击异兽蛋')
                 tapSleep(re.x, re.y, 1.5)
