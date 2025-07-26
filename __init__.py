@@ -23,7 +23,7 @@ if display.widthPixels != 720 or display.heightPixels != 1280:
 
 def main():
     startTime = time.time()
-    自动合成()
+    # 自动合成()
     while True:
         system.open("hb.menghuan.jizhang")
 
@@ -38,7 +38,9 @@ def main():
             if not re:
                 Toast('未进入战场')
                 tapSleep(639, 108, 1.5)  # 空白
-                tapSleep(637, 225, 1.5)  # 空白
+                re = CompareColors.compare("611,222,#D68E84|636,235,#DE968C|648,217,#D6867B")
+                if re:
+                    tapSleep(609, 219, 1.5)  # 空白
                 re = TomatoOcrTap(keyword='重试', x1=322, y1=757, x2=397, y2=804, match_mode='fuzzy')
                 if re:
                     Toast('网络重连')
@@ -98,7 +100,7 @@ def main():
         waitTImeMin = round(waitTIme / 60, 2)
 
         # 开始一键合成
-        if waitTIme > 30:
+        if waitTIme > 30 * 60:
             startTime = currTime
             Toast(f'已运行{waitTImeMin}/30分，前往一键合成')
             自动合成()
@@ -126,6 +128,10 @@ def 自动合成():
         if re:
             for k in range(60):
                 re, _ = TomatoOcrText(555, 37, 609, 71, '反馈')
+                if not re:
+                    re = FindColors.find(
+                        "667,36,#EFEFEF|675,44,#FEFEFE|682,51,#FDFDFD|682,36,#CCCCCC|668,50,#CCCCCC|694,44,#999999",
+                        rect=[641, 11, 702, 74], diff=0.9)
                 if re:
                     Toast('广告结束')
                     action.Key.back()
