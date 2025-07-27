@@ -37,13 +37,7 @@ def main():
             re, _, _ = imageFind('前往', 0.9, 82, 222, 674, 1112)
             if not re:
                 Toast('未进入战场')
-                tapSleep(639, 108, 1.5)  # 空白
-                re = CompareColors.compare("611,222,#D68E84|636,235,#DE968C|648,217,#D6867B")
-                if re:
-                    tapSleep(609, 219, 1.5)  # 空白
-                re = TomatoOcrTap(keyword='重试', x1=322, y1=757, x2=397, y2=804, match_mode='fuzzy')
-                if re:
-                    Toast('网络重连')
+                返回首页()
                 continue
 
         Toast('准备抢夺')
@@ -86,6 +80,21 @@ def main():
             tapSleep(639, 108, 1.5)  # 空白
             tapSleep(19, 91, 1.5)  # 返回
 
+        # 搬运中领取
+        re = FindColors.find("118,1150,#C59A5A|135,1155,#EFE7D6|151,1156,#10BAA5|151,1186,#424D5A|121,1188,#425D73",
+                             rect=[42, 1052, 232, 1259], diff=0.94)
+        if re:
+            Toast('搬运中-领取')
+            tapSleep(re.x, re.y, 2)
+            TomatoOcrTap(281, 1021, 434, 1076, '领取', match_mode='fuzzy')
+            for k in range(3):
+                re = FindColors.find("621,109,#D68A7B|631,107,#CE867B|642,109,#FFF7C5|650,104,#FFF7CE|661,115,#D68E84",
+                                     rect=[484, 44, 701, 396], diff=0.95)
+                if re:
+                    tapSleep(re.x, re.y, 1.5)  # 关闭
+                tapSleep(200, 1066)
+                sleep(1)
+
         re = FindColors.find("600,1147,#F7D7C5|607,1150,#F7A26B|591,1174,#A56963|587,1193,#9C5D52|612,1195,#BDDBD6",
                              rect=[475, 907, 674, 1270], diff=0.95)  # 抢夺按钮
         if re:
@@ -101,16 +110,18 @@ def main():
 
         # 开始一键合成
         if waitTIme > 30 * 60:
+        # if waitTIme > 30:
             startTime = currTime
             Toast(f'已运行{waitTImeMin}/30分，前往一键合成')
             自动合成()
 
-        Toast(f'已运行{waitTImeMin}/30分，等待前往一键合成')
+        Toast(f'已运行{waitTImeMin}/30分，等待一键合成')
         sleep(2)
 
 
 def 自动合成():
     for k in range(5):
+        返回首页()
         re = FindColors.find("12,48,#CE7D73|42,50,#DE9284|22,66,#F7EBB5|28,77,#E6BE94|52,78,#DE968C",
                              rect=[3, 4, 270, 255], diff=0.93)
         if re:
@@ -126,6 +137,7 @@ def 自动合成():
         if not re:
             Toast('未找到一键合成按钮')
         if re:
+            failTimes = 0
             for k in range(60):
                 re, _ = TomatoOcrText(555, 37, 609, 71, '反馈')
                 if not re:
@@ -142,12 +154,31 @@ def 自动合成():
                 sleep(1)
                 re, _ = TomatoOcrText(keyword='合成', match_mode='fuzzy', x1=525, y1=935, x2=622, y2=965)
                 if re:
+                    failTimes = failTimes + 1
+                    break
+                if failTimes > 4:
                     Toast('无可合成异兽')
                     break
         tapSleep(666, 53, 1.5)
         tapSleep(637, 225, 1.5)  # 空白
         return True
     return False
+
+
+def 返回首页():
+    tapSleep(639, 108, 1.5)  # 空白
+    re = CompareColors.compare("611,222,#D68E84|636,235,#DE968C|648,217,#D6867B")
+    if re:
+        tapSleep(609, 219, 1.5)  # 空白
+    re = CompareColors.compare("626,113,#D68A84|645,113,#FFF3B5|661,108,#D68A7B|644,123,#DE9684")
+    if re:
+        tapSleep(609, 219, 1.5)  # 关闭
+    re = CompareColors.compare("180,1178,#F7AA8C|240,1180,#EF9A84|296,1178,#F7AA8C|232,1213,#EF6D5A")
+    if re:
+        tapSleep(232, 1186, 1.5)  # 战场-取消
+    re = TomatoOcrTap(keyword='重试', x1=322, y1=757, x2=397, y2=804, match_mode='fuzzy')
+    if re:
+        Toast('网络重连')
 
 
 main()
