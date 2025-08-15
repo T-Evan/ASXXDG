@@ -25,7 +25,7 @@ config = None
 
 def tunner(k, v):
     global config
-    # print(k, v)
+    print(k, v)
     # print(k)
     # print(v)
 
@@ -39,22 +39,22 @@ def tunner(k, v):
         print('加载成功')
 
 
-# formW = WebWindow(R.ui("ui.html"))
-# formW.size('100vw', '100vh')
-# formW.tunner(tunner)  # 在这里设置消息通道
-# formW.background("#FFFFFF")
-# formW.show()
-#
-# while True:
-#     # print("循环等待中")
-#     time.sleep(1)
-#     if config == "exit":
-#         Dialog.toast('取消执行', 5, 3 | 48, 200, 0)
-#         system.exit()
-#     if config:
-#         Dialog.toast('资源加载中 - 请等待30s', 5, 3 | 48, 200, 0)
-#         # time.sleep(2)
-#         break
+formW = WebWindow(R.ui("ui.html"))
+formW.size('100vw', '100vh')
+formW.tunner(tunner)  # 在这里设置消息通道
+formW.background("#FFFFFF")
+formW.show()
+
+while True:
+    # print("循环等待中")
+    time.sleep(1)
+    if config == "exit":
+        Dialog.toast('取消执行', 5, 3 | 48, 200, 0)
+        system.exit()
+    if config:
+        Dialog.toast('资源加载中 - 请等待30s', 5, 3 | 48, 200, 0)
+        # time.sleep(2)
+        break
 
 功能开关 = {}
 功能开关 = config

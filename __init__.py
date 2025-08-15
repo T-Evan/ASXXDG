@@ -25,98 +25,188 @@ def main():
     startTime = time.time()
     # 自动合成()
     while True:
-        system.open("hb.menghuan.jizhang")
-
-        re = TomatoOcrTap(keyword='战场', x1=33, y1=1224, x2=112, y2=1259, sleep1=2, offsetX=20, offsetY=-30)
-        if re:
-            Toast('进入战场')
-
-        re = FindColors.find("600,1147,#F7D7C5|607,1150,#F7A26B|591,1174,#A56963|587,1193,#9C5D52|612,1195,#BDDBD6",
-                             rect=[475, 907, 674, 1270], diff=0.95)  # 抢夺按钮
-        if not re:
-            re, _, _ = imageFind('前往', 0.9, 82, 222, 674, 1112)
-            if not re:
-                Toast('未进入战场')
-                返回首页()
+        if 功能开关['集市拍卖'] == 1:
+            re = TomatoOcrTap(495, 233, 585, 276, '购买', offsetX=5, offsetY=5, sleep1=0.3)
+            # if re:
+            #     Toast('刷新购买')
+            isFind = False
+            for k in range(10):
+                re = CompareColors.compare("66,606,#E6DBC5|77,628,#E6E3D6|161,617,#E6DFCE|172,609,#E6E3D6")
+                if re:
+                    # Toast('进入购买页')
+                    isFind = True
+                    break
+                sleep(0.1)
+            if not isFind:
+                Toast('未进入购买页')
                 continue
 
-        Toast('准备抢夺')
-        tapSleep(580, 1174, 2)  # 抢夺
-        re, tmpPoints = imageFindAll('前往', 0.9, 82, 222, 674, 1112)
-        for p in tmpPoints:
-            tapSleep(580, 1174, 2)  # 抢夺
-            Toast('进入抢夺')
-            tapSleep(p['center_x'], p['center_y'], 3.5)
-            for k in range(10):
-                Toast('寻找异兽蛋')
-                re = FindColors.find(
-                    "394,607,#E6B26B|404,609,#FFEB9C|393,617,#C57D42|399,617,#DE9E5A|396,654,#8CAEAD|410,654,#7B928C",
-                    diff=0.9)
-                if not re:
-                    re = FindColors.find(
-                        "505,640,#AD5D31|511,632,#EFBA73|513,640,#C58642|522,642,#C58242|521,626,#FFEFD6",
-                        diff=0.9)
-                if re:
-                    Toast('点击异兽蛋')
-                    tapSleep(re.x, re.y, 1.5)
-                    re = imageFindClick('掠夺', sleep1=2)
-                    if re:
-                        re, _ = TomatoOcrText(keyword='取', x1=181, y1=1160, x2=232, y2=1210)
-                        if not re:
-                            Toast("无可抢夺资源，跳过")
-                            break
+            _, countAll = TomatoOcrText(427, 358, 550, 393, '商品数量')
+            _, priceAll = TomatoOcrText(481, 400, 635, 433, '商品价格')
+            count = safe_float_v2(countAll)
+            priceAll = safe_float_v2(priceAll)
+            price = round(priceAll / count, 2)
+            # Toast(f'最低商品单价：{price}')
+            lowPrice = float(功能开关['最低单价'])
+            if lowPrice == 0:
+                lowPrice = 2
+            if price <= 0.0 or price > lowPrice:
+                Toast(f'最低商品单价：{price}，价格 > {lowPrice}，等待刷新')
+                continue
 
-                        Toast('一键上阵')
-                        tapSleep(593, 590, 1.5)
-                        Toast('开始掠夺')
-                        tapSleep(484, 1185, 1.5)  # 开始
-                re = TomatoOcrTap(keyword='取', x1=181, y1=1160, x2=232, y2=1210, sleep1=1)
-                if re:
-                    Toast('无可上阵异兽，等待中')
-                    sleep(10)
+            Toast(f'最低商品单价：{price}，价格 <= {lowPrice}，开始购买')
+            tapSleep(450, 400, 0.2)  # 点击购买
+            tapSleep(487, 894, 0.2)  # 点击购买
+            tapSleep(470, 774, 0.2)  # 点击购买
+            # tapSleep(450, 400, 0.2)  # 点击购买
+            # tapSleep(487, 894, 0.2)  # 点击购买
+            # tapSleep(470, 774, 0.2)  # 点击购买
 
-        if len(tmpPoints) == 0:
-            Toast('界面异常，返回首页')
-            tapSleep(639, 108, 1.5)  # 空白
-            tapSleep(19, 91, 1.5)  # 返回
-
-        # 搬运中领取
-        re = FindColors.find("118,1150,#C59A5A|135,1155,#EFE7D6|151,1156,#10BAA5|151,1186,#424D5A|121,1188,#425D73",
-                             rect=[42, 1052, 232, 1259], diff=0.94)
+            tapSleep(634, 312, 0.2)
+        Toast('开始战场任务')
+        re = CompareColors.compare("614,1114,#844D31|618,1115,#8C593A|626,1115,#7B4531")
         if re:
-            Toast('搬运中-领取')
-            tapSleep(re.x, re.y, 2)
-            TomatoOcrTap(281, 1021, 434, 1076, '领取', match_mode='fuzzy')
-            for k in range(3):
-                re = FindColors.find("621,109,#D68A7B|631,107,#CE867B|642,109,#FFF7C5|650,104,#FFF7CE|661,115,#D68E84",
-                                     rect=[484, 44, 701, 396], diff=0.95)
-                if re:
-                    tapSleep(re.x, re.y, 1.5)  # 关闭
-                tapSleep(200, 1066)
+            tapSleep(611, 1066)
+            Toast('进入战场')
+        re = CompareColors.compare("292,1254,#E6A6EF|355,1257,#8486A4|446,1224,#ADAAB5")
+        if not re:
+            re = CompareColors.compare(
+                "604,173,#FFDB9C|625,176,#D67142|600,178,#EFA23A|626,195,#FFDB9C|636,187,#D67542")
+            if re:
+                tapSleep(628, 176)
+                Toast('关闭弹窗')
+            else:
+                tapSleep(36, 669)
+
+            re = CompareColors.compare("213,1276,#94EBF7|235,1276,#94EBF7")
+            if re:
+                tapSleep(211, 1275)
+
+            Toast('未进入战场')
+            continue
+
+        failTimes = 0
+        for k in range(600):
+            re = CompareColors.compare("249,400,#FFFFEF|345,407,#FFEB6B|405,399,#FFFF84|468,392,#EFD75A")
+            if re:
+                tapSleep(631, 339)
+                Toast('采集完成')
+
+            re = FindColors.find("230,812,#CE593A|228,820,#CE593A|238,811,#D65D3A|238,819,#D65D3A",
+                                 rect=[0, 301, 702, 1164], diff=0.9)
+            if re:
+                Toast('等待采集中')
+                tapSleep(631, 339)
+                sleep(5)
+                continue
+
+            re = FindColors.find("334,683,#84513A|344,683,#84513A|337,691,#7B513A", rect=[14, 291, 701, 1100],
+                                 diff=0.95)
+
+            if not re:
+                re = FindColors.find("533,659,#F7D294|540,659,#F7D29C|542,664,#946D4A|530,662,#7B4D31",
+                                     rect=[0, 301, 702, 1164], diff=0.9)
+            if not re:
+                re = FindColors.find("318,749,#63C28C|320,759,#63C28C|359,752,#63C284|359,759,#63BE84",
+                                     rect=[0, 301, 702, 1164], diff=0.9)
+            if not re:
+                re = FindColors.find("402,743,#DEBE84|405,741,#F7D294|388,762,#FFFFFF|388,767,#FFFFFF",
+                                     rect=[0, 301, 702, 1164], diff=0.9)
+            if not re:
+                failTimes = failTimes + 1
+            if failTimes > 3:
+                Toast('无可采集资源')
                 sleep(1)
+                break
 
-        re = FindColors.find("600,1147,#F7D7C5|607,1150,#F7A26B|591,1174,#A56963|587,1193,#9C5D52|612,1195,#BDDBD6",
-                             rect=[475, 907, 674, 1270], diff=0.95)  # 抢夺按钮
+            if re:
+                Toast('开始采集')
+                tapSleep(re.x, re.y + 5)
+                re = FindColors.find(
+                    "382,1025,#FFE352|298,1017,#FFE352|296,1028,#F7DB52|324,1013,#A45510|325,1025,#9C5108|369,1023,#FFE352|374,1022,#F7DB52",
+                    rect=[4, 239, 702, 1139], diff=0.95)
+                if not re:
+                    re = CompareColors.compare("213,1276,#94EBF7|235,1276,#94EBF7")
+                    if re:
+                        tapSleep(211, 1275)
+                    Toast('等待采集中')
+                    tapSleep(631, 339)
+                    sleep(5)
+                    continue
+
+                tapSleep(re.x, re.y)
+                tapSleep(94, 708)  # 一键上阵
+                tapSleep(528, 1275)  # 开始采集
+            re = CompareColors.compare("213,1276,#94EBF7|235,1276,#94EBF7")
+            if re:
+                tapSleep(211, 1275)
+
+        re = CompareColors.compare("249,400,#FFFFEF|345,407,#FFEB6B|405,399,#FFFF84|468,392,#EFD75A")
         if re:
-            Toast('刷新抢夺')
-            tapSleep(580, 1174, 2)  # 抢夺
-        re = TomatoOcrTap(keyword='免费', x1=508, y1=310, x2=595, y2=344, match_mode='fuzzy')
+            tapSleep(631, 339)
+            Toast('采集完成')
+
+        tapSleep(353, 1178)  # 打开刷新面板
+        re = TomatoOcrTap(132, 1090, 251, 1130, '免费刷新', offsetX=50, offsetY=-80)
         if re:
-            Toast('免费刷新')
+            Toast('灵气免费刷新')
+            tapSleep(356, 912)  # 点击刷新
+            tapSleep(358, 907)  # 立即刷新
 
-        currTime = time.time()
-        waitTIme = currTime - startTime
-        waitTImeMin = round(waitTIme / 60, 2)
+        re = TomatoOcrTap(298, 1025, 412, 1055, '免费刷新', offsetX=50, offsetY=-80)
+        if re:
+            Toast('道具免费刷新')
+            tapSleep(356, 912)  # 点击刷新
+            tapSleep(358, 907)  # 立即刷新
 
-        # 开始一键合成
-        if waitTIme > 30 * 60:
-        # if waitTIme > 30:
-            startTime = currTime
-            Toast(f'已运行{waitTImeMin}/30分，前往一键合成')
-            自动合成()
+        re = CompareColors.compare("323,1276,#FFFFFF|323,1273,#EFBE8C|374,1276,#FFFFFF|366,1273,#E68629")
+        if re:
+            Toast('下方免费刷新')
+            tapSleep(356, 1210)
+            tapSleep(356, 912)  # 点击刷新
+            tapSleep(358, 907)  # 立即刷新
 
-        Toast(f'已运行{waitTImeMin}/30分，等待一键合成')
-        sleep(2)
+        _, daoJuCt = TomatoOcrText(356, 1028, 424, 1054, '道具刷新卡')
+        daoJuCt = safe_int_v2(daoJuCt.replace('x', '').replace('X', ''))
+        needCt = safe_int_v2(功能开关['道具卡刷新数量'])
+        if needCt == 0:
+            needCt = 5
+        if daoJuCt > 0:
+            if daoJuCt > needCt:
+                Toast(f'道具刷新卡数量：{daoJuCt} > {needCt}，无需处理')
+                sleep(1)
+            else:
+                Toast(f'道具刷新卡数量：{daoJuCt} <= {needCt}，操作刷新')
+                tapSleep(356, 946)
+                tapSleep(356, 912)  # 点击刷新
+                tapSleep(358, 907)  # 立即刷新
+                for m in range(2):
+                    re = CompareColors.compare(
+                        "604,173,#FFDB9C|625,176,#D67142|600,178,#EFA23A|626,195,#FFDB9C|636,187,#D67542")
+                    if re:
+                        tapSleep(628, 176)
+                        Toast('关闭弹窗')
+
+        re = CompareColors.compare("312,1270,#CE593A|314,1275,#D65D3A|407,1273,#CE593A")
+        if re:
+            Toast('检查下方刷新')
+            tapSleep(352, 1204, 1.2)
+            _, daoJuCt = TomatoOcrText(364, 831, 467, 861, '道具刷新卡')
+            daoJuCt = safe_int_v2(daoJuCt.replace('x', '').replace('X', ''))
+            needCt = safe_int_v2(功能开关['下方卡刷新数量'])
+            if needCt == 0:
+                needCt = 5
+            if daoJuCt > 0:
+                if daoJuCt > needCt:
+                    Toast(f'下方刷新卡数量：{daoJuCt} > {needCt}，无需处理')
+                    sleep(1)
+                    tapSleep(634, 172)
+                else:
+                    Toast(f'下方刷新卡数量：{daoJuCt} <= {needCt}，操作刷新')
+                    tapSleep(356, 912)  # 点击刷新
+                    tapSleep(358, 907)  # 立即刷新
+
+        tapSleep(336, 293)  # 点击空白返回战场
 
 
 def 自动合成():

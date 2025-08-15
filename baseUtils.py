@@ -484,7 +484,7 @@ def Toast(content, tim=1000):
     global lastToastTime
     nowTime = time.time()
     # 重复提示，2s 1次
-    if content in lastToast and nowTime - lastToastTime < 5:
+    if content in lastToast and nowTime - lastToastTime < 2:
         return
     if nowTime - lastToastTime > 5:
         lastToast = []

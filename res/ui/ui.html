@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="layui/css/layui.css">
-    <title>worldTalk助手</title>
+    <title>梦幻助手</title>
     <style>
         #shouye:checked ~ ul li.richang_content {
             display: none;
@@ -161,7 +161,7 @@
 </head>
 <body style="margin: 0;padding: 0;list-style: none;text-decoration: none;">
 <div class="header">
-    <h3 style="margin-left:110px;">worldTalk助手</h3>
+    <h3 style="margin-left:110px;">梦幻助手</h3>
     <h3 style="margin-left:95px;margin-bottom:20px;color:#98FB98" id="countdown">00</h3>
 </div>
 <div style="height: 36px; width: 100%;">
@@ -180,17 +180,18 @@
         <div style="height: 35px; width: 100%;background-color: white;"></div>
         <div id="toast" class="toast">保存成功</div>
         <li class="shouye_content">
-            <label for="聊天内容">聊天内容:</label><label class="gray-text">(配置多组时随机发送)</label><br>
-            <input type="text" id="聊天内容" name="聊天内容" lay-verify="title" autocomplete="off"
-                   placeholder="输入聊天内容" class="layui-input">
-            <input type="text" id="聊天内容2" name="聊天内容2" lay-verify="title" autocomplete="off"
-                   placeholder="输入聊天内容" class="layui-input">
-            <input type="text" id="聊天内容3" name="聊天内容3" lay-verify="title" autocomplete="off"
-                   placeholder="输入聊天内容" class="layui-input">
-            <input type="text" id="聊天内容4" name="聊天内容4" lay-verify="title" autocomplete="off"
-                   placeholder="输入聊天内容" class="layui-input">
-            <input type="text" id="聊天内容5" name="聊天内容5" lay-verify="title" autocomplete="off"
-                   placeholder="输入聊天内容" class="layui-input">
+            <div class="checkbox-item">
+                <input id="集市拍卖" name="vehicle" type="checkbox" value="Bike">集市拍卖(启动时仅执行抢拍)<br>
+            </div>
+            <label for="最低单价">最低单价:</label>
+            <input type="text" id="最低单价" name="最低单价" lay-verify="title" autocomplete="off"
+                   placeholder="最低单价（默认2）" class="layui-input">
+            <label for="道具卡刷新数量">道具卡刷新数量:</label>
+            <input type="text" id="道具卡刷新数量" name="道具卡刷新数量" lay-verify="title" autocomplete="off"
+                   placeholder="道具卡刷新数量（默认5）" class="layui-input">
+            <label for="下方卡刷新数量">下方卡刷新数量:</label>
+            <input type="text" id="下方卡刷新数量" name="下方卡刷新数量" lay-verify="title" autocomplete="off"
+                   placeholder="下方卡刷新数量（默认5）" class="layui-input">
         </li>
         <li class="richang_content">
         </li>
@@ -355,16 +356,14 @@
     }
 
     function setAllItems() {
-        var 聊天内容 = localStorage.getItem("聊天内容");
-        document.getElementById("聊天内容").value = 聊天内容;
-        var 聊天内容2 = localStorage.getItem("聊天内容2");
-        document.getElementById("聊天内容2").value = 聊天内容2;
-        var 聊天内容3 = localStorage.getItem("聊天内容3");
-        document.getElementById("聊天内容3").value = 聊天内容3;
-        var 聊天内容4 = localStorage.getItem("聊天内容4");
-        document.getElementById("聊天内容4").value = 聊天内容4;
-        var 聊天内容5 = localStorage.getItem("聊天内容5");
-        document.getElementById("聊天内容5").value = 聊天内容5;
+        setSwitchStatus("集市拍卖");
+
+        var 最低单价 = localStorage.getItem("最低单价");
+        document.getElementById("最低单价").value = 最低单价;
+        var 道具卡刷新数量 = localStorage.getItem("道具卡刷新数量");
+        document.getElementById("道具卡刷新数量").value = 道具卡刷新数量;
+        var 下方卡刷新数量 = localStorage.getItem("下方卡刷新数量");
+        document.getElementById("下方卡刷新数量").value = 下方卡刷新数量;
     }
 
     window.onload = function () {
@@ -402,23 +401,20 @@
     }
 
     function saveAllItems() {
-        var 聊天内容 = document.getElementById("聊天内容").value;
-        localStorage.setItem("聊天内容", 聊天内容);
-        var 聊天内容2 = document.getElementById("聊天内容2").value;
-        localStorage.setItem("聊天内容2", 聊天内容2);
-        var 聊天内容3 = document.getElementById("聊天内容3").value;
-        localStorage.setItem("聊天内容3", 聊天内容3);
-        var 聊天内容4 = document.getElementById("聊天内容4").value;
-        localStorage.setItem("聊天内容4", 聊天内容4);
-        var 聊天内容5 = document.getElementById("聊天内容5").value;
-        localStorage.setItem("聊天内容5", 聊天内容5);
+        集市拍卖 = saveSwitchStatus("集市拍卖");
+
+        var 最低单价 = document.getElementById("最低单价").value;
+        localStorage.setItem("最低单价", 最低单价);
+        var 道具卡刷新数量 = document.getElementById("道具卡刷新数量").value;
+        localStorage.setItem("道具卡刷新数量", 道具卡刷新数量);
+        var 下方卡刷新数量 = document.getElementById("下方卡刷新数量").value;
+        localStorage.setItem("下方卡刷新数量", 下方卡刷新数量);
 
         var data = {
-            聊天内容: 聊天内容,
-            聊天内容2: 聊天内容2,
-            聊天内容3: 聊天内容3,
-            聊天内容4: 聊天内容4,
-            聊天内容5: 聊天内容5,
+            集市拍卖: 集市拍卖,
+            最低单价: 最低单价,
+            道具卡刷新数量: 道具卡刷新数量,
+            下方卡刷新数量: 下方卡刷新数量,
         };
 
         return data
