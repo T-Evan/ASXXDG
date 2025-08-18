@@ -37,17 +37,22 @@ def main():
                     Toast('返回')
                     tapSleep(91, 42, 1.5)  # 空白
 
-                re = TomatoOcrTap(1017, 651, 1065, 677, '星系', sleep1=3)
+                re, _ = TomatoOcrText(537, 320, 737, 360, '是否前往', match_mode='fuzzy')
+                if re:
+                    Toast('取消前往星系')
+                    tapSleep(894, 268, 1.5)
+
+                re = TomatoOcrTap(1017, 651, 1065, 677, '星系', sleep1=6, offsetX=5, offsetY=5)
                 if not re:
-                    re = TomatoOcrTap(1185, 651, 1228, 680, '星系', sleep1=3)
+                    re = TomatoOcrTap(1185, 651, 1228, 680, '星系', sleep1=6, offsetX=5, offsetY=5)
                 if re:
                     Toast('进入星系')
                 if not re:
                     Toast('重置星系页面')
-                    re = TomatoOcrTap(1186, 650, 1223, 674, '星云', sleep1=3)
+                    re = TomatoOcrTap(1186, 650, 1223, 674, '星', sleep1=4, match_mode='fuzzy')
                     continue
 
-                re, _ = TomatoOcrText(1186, 650, 1223, 674, '星云')
+                re, _ = TomatoOcrText(1186, 650, 1223, 674, '星', match_mode='fuzzy')
                 if not re:
                     Toast('未进入星系')
                     re = TomatoOcrTap(616, 417, 663, 440, '确定')
@@ -67,7 +72,42 @@ def main():
                 if re:
                     Toast('切换2D视角')
                 isFind = False
-                for k in range(16):
+                for k in range(18):
+                    noCaiJi = False
+                    if 功能开关['采集残骸'] == 1:
+                        for b in range(2):
+                            if noCaiJi:
+                                break
+                            re = imageFindClick('舰队残骸', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
+                                                y2=662)
+                            if not re:
+                                re = imageFindClick('舰队残骸-2', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
+                                                    y2=662)
+                            if re:
+                                Toast('点击残骸')
+                                sleep(1)
+                                for m in range(3):
+                                    ifFind = TomatoOcrTap(906, 379, 964, 410, '采集', offsetX=5, offsetY=5)
+                                    re, _ = TomatoOcrText(906, 379, 964, 410, '召回')
+                                    if re:
+                                        noCaiJi = True
+                                        break
+                                    if ifFind:
+                                        re = TomatoOcrTap(616, 417, 663, 440, '确定')
+                                        if re:
+                                            tapSleep(165, 385)  # 返回主页
+                                            noCaiJi = True
+                                            Toast('没有可用的采集船')
+                                        break
+                                    sleep(1)
+                                re = CompareColors.compare("82,37,#FFFFFF|77,45,#FDFDFD|82,51,#FFFFFF")
+                                if re:
+                                    Toast('返回')
+                                    tapSleep(91, 42, 1.5)  # 空白
+                                tapSleep(34, 374)  # 空白
+                            if noCaiJi:
+                                break
+                            sleep(0.3)
                     isFind = imageFindClick('舰队4级', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148, x2=1151,
                                             y2=628)
                     # re = FindColors.find(
@@ -99,31 +139,69 @@ def main():
                                                 y2=628)
                     if not isFind:
                         Toast('未找到舰队')
+                        # if k < 2:
+                        #     swipe(591, 522, 585, 197)
+                        #     sleep(1.7)
+                        # if 4 > k >= 2:
+                        #     swipe(585, 197, 591, 522)
+                        #     sleep(1.7)
+                        # if 6 > k >= 4:
+                        #     swipe(585, 197, 591, 522)
+                        #     # swipe(834, 422, 245, 374)
+                        #     sleep(1.7)
+                        # if 8 > k >= 6:
+                        #     swipe(591, 522, 585, 197)
+                        #     # swipe(245, 374, 834, 422)
+                        #     sleep(1.7)
+                        # if 10 > k >= 8:
+                        #     swipe(245, 374, 834, 422)
+                        #     sleep(1.7)
+                        # if 12 > k >= 10:
+                        #     swipe(834, 422, 245, 374)
+                        #     sleep(1.7)
+                        # if 14 > k >= 12:
+                        #     swipe(834, 422, 245, 374)
+                        #     sleep(1.7)
+                        # if 16 > k >= 14:
+                        #     swipe(245, 374, 834, 422)
+                        #     sleep(1.7)
                         if k < 2:
-                            swipe(591, 522, 585, 197)
+                            swipe(591, 522, 585, 197)  # 上划
                             sleep(1.7)
-                        if 4 > k >= 2:
-                            swipe(585, 197, 591, 522)
+                        elif 3 > k >= 2:
+                            swipe(245, 374, 834, 422)  # 左到右划
                             sleep(1.7)
-                        if 6 > k >= 4:
-                            swipe(585, 197, 591, 522)
-                            # swipe(834, 422, 245, 374)
+                        elif 5 > k >= 3:
+                            swipe(834, 422, 245, 374)  # 右到左划
                             sleep(1.7)
-                        if 8 > k >= 6:
-                            swipe(591, 522, 585, 197)
-                            # swipe(245, 374, 834, 422)
+                        elif 6 > k >= 5:
+                            swipe(245, 374, 834, 422)  # 左到右划
                             sleep(1.7)
-                        if 10 > k >= 8:
-                            swipe(245, 374, 834, 422)
+                        # 下划配合左右滑动
+                        elif 8 > k >= 6:
+                            swipe(585, 197, 591, 522)  # 下划
                             sleep(1.7)
-                        if 12 > k >= 10:
-                            swipe(834, 422, 245, 374)
+                        elif 9 > k >= 8:
+                            swipe(245, 374, 834, 422)  # 左到右划
                             sleep(1.7)
-                        if 14 > k >= 12:
-                            swipe(834, 422, 245, 374)
+                        elif 11 > k >= 9:
+                            swipe(834, 422, 245, 374)  # 右到左划
                             sleep(1.7)
-                        if 16 > k >= 14:
-                            swipe(245, 374, 834, 422)
+                        elif 12 > k >= 11:
+                            swipe(245, 374, 834, 422)  # 左到右划
+                            sleep(1.7)
+                        # 下划配合左右滑动
+                        elif 14 > k >= 12:
+                            swipe(585, 197, 591, 522)  # 下划
+                            sleep(1.7)
+                        elif 15 > k >= 14:
+                            swipe(245, 374, 834, 422)  # 左到右划
+                            sleep(1.7)
+                        elif 17 > k >= 15:
+                            swipe(834, 422, 245, 374)  # 右到左划
+                            sleep(1.7)
+                        elif 18 > k >= 17:
+                            swipe(245, 374, 834, 422)  # 左到右划
                             sleep(1.7)
                         continue
                     if isFind:
@@ -148,6 +226,8 @@ def main():
                     Toast('未找到攻击按钮')
                     continue
                 re = TomatoOcrTap(1117, 114, 1197, 145, '快速维修')
+                if not re:
+                    re = TomatoOcrTap(1117, 115, 1199, 142, '快速维修')
                 if re:
                     Toast('快速维修')
                 Toast('选择舰队')
@@ -165,12 +245,17 @@ def main():
                     Toast('未找到舰队确认入口')
                     continue
 
+                re, _, _ = TomatoOcrFindRange('确定', x1=651, y1=459, x2=1117, y2=702)
+                if re:
+                    Toast('无可用舰队')
+                    tapSleep(365, 620, 1.2)  # 取消
+
                 failTimes = 0
                 for k in range(225):
                     re, _, _ = imageFind('00计时', confidence1=0.8)
                     if not re:
                         Toast(f'跃迁状态识别失败-{failTimes}/5')
-                        re, _, _ = imageFind('战斗中', confidence1=0.9, x1=1097, y1=314, x2=1266, y2=616)
+                        re, _, _ = imageFind('战斗中', confidence1=0.8, x1=1097, y1=314, x2=1266, y2=616)
                         if re:
                             Toast(f'进入战斗状态')
                             break
@@ -190,7 +275,7 @@ def main():
                         "1200,456,#A2070A|1198,463,#FFC9C9|1209,462,#FFC9C9|1210,478,#BC5D44|1198,476,#FFC9C9",
                         rect=[1097, 314, 1266, 616], diff=0.95)
                     if not re:
-                        re, _, _ = imageFind('战斗中', confidence1=0.9, x1=1097, y1=314, x2=1266, y2=616)
+                        re, _, _ = imageFind('战斗中', confidence1=0.8, x1=1097, y1=314, x2=1266, y2=616)
                     if not re:
                         Toast(f'战斗状态识别失败-{failTimes}/3')
                         failTimes += 1
@@ -202,38 +287,6 @@ def main():
                     sleep(2)
                 if isDone:
                     break
-        if 功能开关['采集残骸'] == 1:
-            for k in range(5):
-                noCaiJi = False
-                re = imageFindClick('舰队残骸', confidence1=0.7, offsetX=2, x1=80, y1=177, x2=1245,
-                                    y2=662)
-                if not re:
-                    re = imageFindClick('舰队残骸-2', confidence1=0.7, offsetX=2, x1=80, y1=177, x2=1245,
-                                        y2=662)
-                if re:
-                    Toast('点击残骸')
-                    sleep(1)
-                    for m in range(3):
-                        ifFind = TomatoOcrTap(906, 379, 964, 410, '采集', offsetX=5, offsetY=5)
-                        re, _ = TomatoOcrText(906, 379, 964, 410, '召回')
-                        if re:
-                            break
-                        if ifFind:
-                            re = TomatoOcrTap(616, 417, 663, 440, '确定')
-                            if re:
-                                tapSleep(165, 385)  # 返回主页
-                                noCaiJi = True
-                                Toast('没有可用的采集船')
-                            break
-                        sleep(1)
-                    re = CompareColors.compare("82,37,#FFFFFF|77,45,#FDFDFD|82,51,#FFFFFF")
-                    if re:
-                        Toast('返回')
-                        tapSleep(91, 42, 1.5)  # 空白
-                    tapSleep(34, 374)  # 空白
-                if noCaiJi:
-                    break
-                sleep(1)
 
         if 功能开关['快速维修'] == 1:
             re = imageFindClick('右侧菜单-2', confidence1=0.7, offsetX=2, x1=1114, y1=271, x2=1274,
