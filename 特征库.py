@@ -7,6 +7,7 @@ from ascript.android import action
 from ascript.android.screen import CompareColors
 import time
 
+
 def swipe(x1, y1, x2, y2, dur=500):
     # print(x1, y1, x2, y2)
     action.slide(x1, y1, x2, y2, dur)
@@ -99,7 +100,7 @@ def imageFindClick(name, sleep1=1, confidence1=0.7, x1=0, y1=0, x2=720, y2=1280,
                 x, y = res["center_x"], res["center_y"]
                 click(x + offsetX, y + offsetY)
                 sleep(sleep1)
-                print(f"imageFindClick识别成功: {name}")
+                print(f"imageFindClick识别成功: {name},{x + offsetX},{y + offsetY}")
                 return True
             else:
                 print(f"imageFindClick识别失败: {name}")

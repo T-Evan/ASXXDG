@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="layui/css/layui.css">
-    <title>梦幻助手</title>
+    <title>新星帝国</title>
     <style>
         #shouye:checked ~ ul li.richang_content {
             display: none;
@@ -161,7 +161,7 @@
 </head>
 <body style="margin: 0;padding: 0;list-style: none;text-decoration: none;">
 <div class="header">
-    <h3 style="margin-left:110px;">梦幻助手</h3>
+    <h3 style="margin-left:110px;">新星帝国</h3>
     <h3 style="margin-left:95px;margin-bottom:20px;color:#98FB98" id="countdown">00</h3>
 </div>
 <div style="height: 36px; width: 100%;">
@@ -181,17 +181,14 @@
         <div id="toast" class="toast">保存成功</div>
         <li class="shouye_content">
             <div class="checkbox-item">
-                <input id="集市拍卖" name="vehicle" type="checkbox" value="Bike">集市拍卖(启动时仅执行抢拍)<br>
+                <input id="攻击舰队" name="vehicle" type="checkbox" value="Bike">攻击舰队<br>
             </div>
-            <label for="最低单价">最低单价:</label>
-            <input type="text" id="最低单价" name="最低单价" lay-verify="title" autocomplete="off"
-                   placeholder="最低单价（默认2）" class="layui-input">
-            <label for="道具卡刷新数量">道具卡刷新数量:</label>
-            <input type="text" id="道具卡刷新数量" name="道具卡刷新数量" lay-verify="title" autocomplete="off"
-                   placeholder="道具卡刷新数量（默认5）" class="layui-input">
-            <label for="下方卡刷新数量">下方卡刷新数量:</label>
-            <input type="text" id="下方卡刷新数量" name="下方卡刷新数量" lay-verify="title" autocomplete="off"
-                   placeholder="下方卡刷新数量（默认5）" class="layui-input">
+            <div class="checkbox-item">
+                <input id="采集残骸" name="vehicle" type="checkbox" value="Bike">采集残骸<br>
+            </div>
+            <div class="checkbox-item">
+                <input id="快速维修" name="vehicle" type="checkbox" value="Bike">快速维修<br>
+            </div>
         </li>
         <li class="richang_content">
         </li>
@@ -356,14 +353,10 @@
     }
 
     function setAllItems() {
-        setSwitchStatus("集市拍卖");
+        setSwitchStatus("攻击舰队");
+        setSwitchStatus("采集残骸");
+        setSwitchStatus("快速维修");
 
-        var 最低单价 = localStorage.getItem("最低单价");
-        document.getElementById("最低单价").value = 最低单价;
-        var 道具卡刷新数量 = localStorage.getItem("道具卡刷新数量");
-        document.getElementById("道具卡刷新数量").value = 道具卡刷新数量;
-        var 下方卡刷新数量 = localStorage.getItem("下方卡刷新数量");
-        document.getElementById("下方卡刷新数量").value = 下方卡刷新数量;
     }
 
     window.onload = function () {
@@ -401,20 +394,14 @@
     }
 
     function saveAllItems() {
-        集市拍卖 = saveSwitchStatus("集市拍卖");
-
-        var 最低单价 = document.getElementById("最低单价").value;
-        localStorage.setItem("最低单价", 最低单价);
-        var 道具卡刷新数量 = document.getElementById("道具卡刷新数量").value;
-        localStorage.setItem("道具卡刷新数量", 道具卡刷新数量);
-        var 下方卡刷新数量 = document.getElementById("下方卡刷新数量").value;
-        localStorage.setItem("下方卡刷新数量", 下方卡刷新数量);
+        攻击舰队 = saveSwitchStatus("攻击舰队");
+        采集残骸 = saveSwitchStatus("采集残骸");
+        快速维修 = saveSwitchStatus("快速维修");
 
         var data = {
-            集市拍卖: 集市拍卖,
-            最低单价: 最低单价,
-            道具卡刷新数量: 道具卡刷新数量,
-            下方卡刷新数量: 下方卡刷新数量,
+            攻击舰队: 攻击舰队,
+            采集残骸: 采集残骸,
+            快速维修: 快速维修,
         };
 
         return data
