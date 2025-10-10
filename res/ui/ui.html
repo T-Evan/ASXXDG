@@ -180,15 +180,56 @@
         <div style="height: 35px; width: 100%;background-color: white;"></div>
         <div id="toast" class="toast">保存成功</div>
         <li class="shouye_content">
-            <div class="checkbox-item">
-                <input id="攻击舰队" name="vehicle" type="checkbox" value="Bike">攻击舰队<br>
-            </div>
-            <div class="checkbox-item">
-                <input id="采集残骸" name="vehicle" type="checkbox" value="Bike">采集残骸<br>
-            </div>
-            <div class="checkbox-item">
-                <input id="快速维修" name="vehicle" type="checkbox" value="Bike">快速维修<br>
-            </div>
+            <fieldset>
+                <legend>星系探索</legend>
+                <div class="checkbox-item">
+                    <input id="攻击舰队" name="vehicle" type="checkbox" value="Bike">攻击舰队<br>
+                </div>
+                <div class="flex-container">
+                    <label for="攻击目标">攻击目标:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input id="清道夫舰队" name="vehicle" type="checkbox" value="Bike">清道夫舰队<br>
+                        </div>
+                        <div class="checkbox-item">
+                            <input id="清道夫战斗群" name="vehicle" type="checkbox" value="Bike">清道夫战斗群<br>
+                        </div>
+                    </div>
+                </div>
+                <label for="选择舰队">出动舰队:</label><label class="gray-text">（默认勾选第一个舰队）</label>
+                <div class="flex-container">
+                    <div class="checkbox-item">
+                        <input id="选择全部舰队" name="vehicle" type="checkbox" value="Bike">选择全部舰队<br>
+                    </div>
+                    <div class="checkbox-item">
+                        <input id="智能分配" name="vehicle" type="checkbox" value="Bike">智能分配<br>
+                    </div>
+                </div>
+                <label class="gray-text">（智能分配：一队等待精英清道夫，其余队打小型清道夫）</label>
+                <div class="flex-container">
+                    <label for="寻怪方式">寻怪方式:</label><label class="gray-text">（默认滑动寻找）</label>
+                    <div class="checkbox-item">
+                        <input id="仅寻找当前位置" name="vehicle" type="checkbox" value="Bike">仅寻找当前位置<br>
+                    </div>
+                </div>
+                <div class="checkbox-item">
+                    <input id="采集残骸" name="vehicle" type="checkbox" value="Bike">采集残骸<br>
+                </div>
+                <div class="flex-container">
+                    <label for="采集目标">采集目标:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input id="舰队残骸" name="vehicle" type="checkbox" value="Bike">舰队残骸<br>
+                        </div>
+                        <div class="checkbox-item">
+                            <input id="水晶残骸" name="vehicle" type="checkbox" value="Bike">水晶残骸<br>
+                        </div>
+                    </div>
+                </div>
+                <div class="checkbox-item">
+                    <input id="快速维修" name="vehicle" type="checkbox" value="Bike">快速维修<br>
+                </div>
+            </fieldset>
         </li>
         <li class="richang_content">
         </li>
@@ -354,7 +395,14 @@
 
     function setAllItems() {
         setSwitchStatus("攻击舰队");
+        setSwitchStatus("清道夫舰队");
+        setSwitchStatus("清道夫战斗群");
+        setSwitchStatus("选择全部舰队");
+        setSwitchStatus("智能分配");
+        setSwitchStatus("仅寻找当前位置");
         setSwitchStatus("采集残骸");
+        setSwitchStatus("舰队残骸");
+        setSwitchStatus("水晶残骸");
         setSwitchStatus("快速维修");
 
     }
@@ -395,12 +443,26 @@
 
     function saveAllItems() {
         攻击舰队 = saveSwitchStatus("攻击舰队");
+        清道夫舰队 = saveSwitchStatus("清道夫舰队");
+        清道夫战斗群 = saveSwitchStatus("清道夫战斗群");
+        选择全部舰队 = saveSwitchStatus("选择全部舰队");
+        智能分配 = saveSwitchStatus("智能分配");
+        仅寻找当前位置 = saveSwitchStatus("仅寻找当前位置");
         采集残骸 = saveSwitchStatus("采集残骸");
+        舰队残骸 = saveSwitchStatus("舰队残骸");
+        水晶残骸 = saveSwitchStatus("水晶残骸");
         快速维修 = saveSwitchStatus("快速维修");
 
         var data = {
             攻击舰队: 攻击舰队,
+            清道夫舰队: 清道夫舰队,
+            清道夫战斗群: 清道夫战斗群,
+            选择全部舰队: 选择全部舰队,
+            智能分配: 智能分配,
+            仅寻找当前位置: 仅寻找当前位置,
             采集残骸: 采集残骸,
+            舰队残骸: 舰队残骸,
+            水晶残骸: 水晶残骸,
             快速维修: 快速维修,
         };
 
