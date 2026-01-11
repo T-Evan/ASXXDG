@@ -13,16 +13,16 @@ from ascript.android.action import Path
 
 display = Device.display()
 # 屏幕宽度
-if (display.widthPixels != 720 or display.heightPixels != 1280) and (
+if (
         display.widthPixels != 1280 or display.heightPixels != 720):
     Toast(f'分辨率为 {display.widthPixels} * {display.heightPixels}，请检查分辨率是否正确')
-    Dialog.confirm("屏幕分辨率不为 720 * 1280，请重新设置", "分辨率错误")
-    r = system.shell(f"wm size 720x1280")
-    r = system.shell(f"wm density 320")
+    Dialog.confirm("屏幕分辨率不为横向 720 * 1280，请重新设置并进入游戏", "分辨率错误")
+    # r = system.shell(f"wm size 720x1280")
+    # r = system.shell(f"wm density 320")
     display = Device.display()
-    if (display.widthPixels == 720 or display.heightPixels == 1280) and (
+    if (
             display.widthPixels == 1280 or display.heightPixels == 720):
-        Dialog.confirm("屏幕分辨率已设置为 1080 * 1280", "分辨率已调整")
+        Dialog.confirm("屏幕分辨率已设置为 720 * 1280", "分辨率已调整")
 
 
 def main():
@@ -60,7 +60,7 @@ def main():
                     tapSleep(362, 8, 1.5)
 
                 if 功能开关['仅寻找当前位置'] == 0:
-                    re = TomatoOcrTap(1017, 651, 1065, 677, '星系', sleep1=6, offsetX=5, offsetY=5)
+                    re = TomatoOcrTap(1015, 650, 1061, 679, '星系', sleep1=6, offsetX=5, offsetY=5)
                     if not re:
                         re = TomatoOcrTap(1185, 651, 1228, 680, '星系', sleep1=6, offsetX=5, offsetY=5)
                     if re:
@@ -77,13 +77,20 @@ def main():
                         Toast('重置星系页面')
                         failCt = failCt + 1
                         re = TomatoOcrTap(1186, 650, 1223, 674, '星', sleep1=4, match_mode='fuzzy')
+                        if not re:
+                            re = TomatoOcrFindRangeClick('星系', x1=792, y1=85, x2=1094, y2=145)
                         continue
 
                 failCt = 0
-                re, _ = TomatoOcrText(1000, 648, 1077, 677, '我的', match_mode='fuzzy')
-                if not re:
-                    re, _ = TomatoOcrText(1003, 651, 1064, 676, '空间站', match_mode='fuzzy')
-                if not re:
+                isFind = False
+                for k in range(3):
+                    isFind, _ = TomatoOcrText(1000, 648, 1077, 677, '我的', match_mode='fuzzy')
+                    if not isFind:
+                        isFind, _ = TomatoOcrText(1003, 651, 1064, 676, '空间站', match_mode='fuzzy')
+                    if not isFind:
+                        Toast('等待进入星系')
+                        sleep(2)
+                if not isFind:
                     Toast('未进入星系')
                     re = TomatoOcrTap(616, 417, 663, 440, '确定')
                     re, _ = TomatoOcrText(905, 385, 974, 431, '召回')
@@ -109,7 +116,7 @@ def main():
                     continue
 
                 Toast('开始战场任务')
-                re = TomatoOcrTap(410, 50, 432, 66, '2D', sleep1=3)
+                re = TomatoOcrTap(410, 50, 432, 66, '2D', sleep1=5)
                 if re:
                     Toast('切换2D视角')
 
@@ -137,8 +144,12 @@ def main():
                     sleep(1)
 
                 # 定位空间站，优先寻找空间站附近目标
-                re = imageFindClick('空间站', confidence1=0.7, offsetX=2, offsetY=2, x1=14, y1=100, x2=1271, y2=637,
+                re = imageFindClick('空间站', confidence1=0.7, offsetX=2, offsetY=2, x1=97, y1=168, x2=1162, y2=634,
                                     rgb=True)
+                if not re:
+                    re = imageFindClick('空间站2', confidence1=0.7, offsetX=2, offsetY=2, x1=97, y1=168, x2=1162,
+                                        y2=634,
+                                        rgb=True)
                 if re:
                     Toast('已找到空间站，优先寻找附近目标')
                     tapSleep(488, 25)
@@ -409,6 +420,8 @@ def 选择舰队攻击(fightType=''):
     re = TomatoOcrTap(1117, 114, 1197, 145, '快速维修', sleep1=1)
     if not re:
         re = TomatoOcrTap(1117, 115, 1199, 142, '快速维修', sleep1=1)
+    if not re:
+        re = TomatoOcrTap(1114, 117, 1208, 145, '快速维修', sleep1=1)
     if re:
         Toast('快速维修')
     Toast('选择舰队')
@@ -418,18 +431,29 @@ def 选择舰队攻击(fightType=''):
             tapSleep(1008, 140, 1.2)  # 点击第一舰队
         if fightType == '清道夫舰队':
             Toast('普通，其余舰队攻击')
-            re = TomatoOcrFindRangeClick('全部', x1=771, y1=451, x2=1237, y2=702, offsetX=5, offsetY=8,
+            re = TomatoOcrFindRangeClick('全部', x1=768, y1=348, x2=1237, y2=711, offsetX=5, offsetY=8,
                                          match_mode='fuzzy', sleep1=1)
             re = CompareColors.compare("794,137,#C5E6FF|797,140,#C4E5FE")
             if re:
                 tapSleep(1008, 140, 1.2)  # 点击第一舰队取消
-    elif 功能开关['选择全部舰队'] == 1:
-        Toast('选择全部舰队')
-        re = TomatoOcrFindRangeClick('全部', x1=771, y1=451, x2=1237, y2=702, offsetX=5, offsetY=8,
+    elif 功能开关['全部舰队'] == 1:
+        Toast('全部舰队')
+        re = TomatoOcrFindRangeClick('全部', x1=768, y1=348, x2=1237, y2=711, offsetX=5, offsetY=8,
                                      match_mode='fuzzy', sleep1=1)
+    elif 功能开关['单独派遣'] == 1:
+        Toast('单独派遣')
+        re = TomatoOcrFindRangeClick('母港', x1=1102, y1=71, x2=1231, y2=705, offsetX=5, offsetY=8,
+                                     match_mode='fuzzy', sleep1=1)
+        if not re:
+            Toast('单独派遣失败，选择默认舰队')
+            re = TomatoOcrFindRangeClick('全部', x1=768, y1=348, x2=1237, y2=711, offsetX=5, offsetY=8,
+                                         match_mode='fuzzy', sleep1=1)
     else:
         Toast('选择默认舰队')
-        tapSleep(1008, 140, 1.2)  # 点击第一舰队
+        re = TomatoOcrFindRangeClick('母港', x1=1102, y1=71, x2=1231, y2=705, offsetX=5, offsetY=8,
+                                     match_mode='fuzzy', sleep1=1)
+        if not re:
+            tapSleep(1008, 140, 1.2)  # 点击第一舰队
     re = TomatoOcrTap(1025, 617, 1082, 651, '确定', offsetX=5, offsetY=8)
     if not re:
         re = TomatoOcrTap(874, 621, 920, 647, '确定', offsetX=5, offsetY=8)

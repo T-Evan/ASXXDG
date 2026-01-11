@@ -199,7 +199,10 @@
                 <label for="选择舰队">出动舰队:</label><label class="gray-text">（默认勾选第一个舰队）</label>
                 <div class="flex-container">
                     <div class="checkbox-item">
-                        <input id="选择全部舰队" name="vehicle" type="checkbox" value="Bike">选择全部舰队<br>
+                        <input id="全部舰队" name="vehicle" type="checkbox" value="Bike">全部舰队<br>
+                    </div>
+                    <div class="checkbox-item">
+                        <input id="单独派遣" name="vehicle" type="checkbox" value="Bike">单独派遣<br>
                     </div>
                     <div class="checkbox-item">
                         <input id="智能分配" name="vehicle" type="checkbox" value="Bike">智能分配<br>
@@ -397,8 +400,9 @@
         setSwitchStatus("攻击舰队");
         setSwitchStatus("清道夫舰队");
         setSwitchStatus("清道夫战斗群");
-        setSwitchStatus("选择全部舰队");
+        setSwitchStatus("全部舰队");
         setSwitchStatus("智能分配");
+        setSwitchStatus("单独派遣");
         setSwitchStatus("仅寻找当前位置");
         setSwitchStatus("采集残骸");
         setSwitchStatus("舰队残骸");
@@ -445,8 +449,9 @@
         攻击舰队 = saveSwitchStatus("攻击舰队");
         清道夫舰队 = saveSwitchStatus("清道夫舰队");
         清道夫战斗群 = saveSwitchStatus("清道夫战斗群");
-        选择全部舰队 = saveSwitchStatus("选择全部舰队");
+        全部舰队 = saveSwitchStatus("全部舰队");
         智能分配 = saveSwitchStatus("智能分配");
+        单独派遣 = saveSwitchStatus("单独派遣");
         仅寻找当前位置 = saveSwitchStatus("仅寻找当前位置");
         采集残骸 = saveSwitchStatus("采集残骸");
         舰队残骸 = saveSwitchStatus("舰队残骸");
@@ -457,8 +462,9 @@
             攻击舰队: 攻击舰队,
             清道夫舰队: 清道夫舰队,
             清道夫战斗群: 清道夫战斗群,
-            选择全部舰队: 选择全部舰队,
+            全部舰队: 全部舰队,
             智能分配: 智能分配,
+            单独派遣: 单独派遣,
             仅寻找当前位置: 仅寻找当前位置,
             采集残骸: 采集残骸,
             舰队残骸: 舰队残骸,

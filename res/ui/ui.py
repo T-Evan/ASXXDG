@@ -67,4 +67,4 @@ def tunner(k, v):
 # 调整悬浮窗位置
 from ascript.android.ui import FloatWindow
 
-FloatWindow.show(0.99, 0.99, 0.25)
+FloatWindow.show(0.01, 0.01, 0.25)
