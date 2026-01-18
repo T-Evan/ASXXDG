@@ -74,6 +74,10 @@ def main():
                         if re:
                             Toast('返回')
                             tapSleep(377, 20, 1.5)  # 舰队管理页空白
+                        re = imageFindClick('返回-2', confidence1=0.8, offsetX=5, offsetY=3, x1=105, y1=22,
+                                            x2=1257, y2=351)
+                        if re:
+                            Toast('关闭任务页面')
                         Toast('重置星系页面')
                         failCt = failCt + 1
                         re = TomatoOcrTap(1186, 650, 1223, 674, '星', sleep1=4, match_mode='fuzzy')
@@ -144,13 +148,13 @@ def main():
                     sleep(1)
 
                 # 定位空间站，优先寻找空间站附近目标
-                re = imageFindClick('空间站', confidence1=0.7, offsetX=2, offsetY=2, x1=97, y1=168, x2=1162, y2=634,
-                                    rgb=True)
-                if not re:
-                    re = imageFindClick('空间站2', confidence1=0.7, offsetX=2, offsetY=2, x1=97, y1=168, x2=1162,
-                                        y2=634,
-                                        rgb=True)
-                if re:
+                re1 = imageFindClick('空间站', confidence1=0.8, offsetX=2, offsetY=2, x1=97, y1=168, x2=1162, y2=634,
+                                     rgb=True)
+                if not re1:
+                    re1 = imageFindClick('空间站2', confidence1=0.8, offsetX=2, offsetY=2, x1=97, y1=168, x2=1162,
+                                         y2=634,
+                                         rgb=True)
+                if re1:
                     Toast('已找到空间站，优先寻找附近目标')
                     tapSleep(488, 25)
 
@@ -195,6 +199,15 @@ def main():
                                 re = imageFindClick('清道夫残骸-4', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
                                                     y2=662)
                             if not re:
+                                re = imageFindClick('清道夫残骸-5', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
+                                                    y2=662)
+                            if not re:
+                                re = imageFindClick('清道夫残骸-6', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
+                                                    y2=662)
+                            if not re:
+                                re = imageFindClick('清道夫残骸-7', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
+                                                    y2=662)
+                            if not re:
                                 re = imageFindClick('舰队残骸', confidence1=0.75, offsetX=2, x1=80, y1=177, x2=1245,
                                                     y2=662)
                             if not re:
@@ -203,22 +216,42 @@ def main():
                             if 功能开关['水晶残骸'] == 1:
                                 Toast('寻找水晶残骸')
                                 if not re:
-                                    re = imageFindClick('水晶残骸-1', confidence1=0.75, offsetX=2, x1=80, y1=177,
+                                    re = imageFindClick('残骸水晶-1', confidence1=0.85, offsetX=2, x1=80, y1=177,
                                                         x2=1245,
                                                         y2=662)
                                 if not re:
-                                    re = imageFindClick('水晶残骸-2', confidence1=0.75, offsetX=2, x1=80, y1=177,
+                                    re = imageFindClick('残骸水晶-2', confidence1=0.85, offsetX=2, x1=80, y1=177,
+                                                        x2=1245,
+                                                        y2=662)
+                            if not re and 功能开关['合金残骸'] == 1:
+                                Toast('寻找合金残骸')
+                                if not re:
+                                    re = imageFindClick('残骸合金-1', confidence1=0.85, offsetX=2, x1=80, y1=177,
                                                         x2=1245,
                                                         y2=662)
                                 if not re:
-                                    re = imageFindClick('水晶残骸-3', confidence1=0.75, offsetX=2, x1=80, y1=177,
+                                    re = imageFindClick('残骸合金-2', confidence1=0.85, offsetX=2, x1=80, y1=177,
                                                         x2=1245,
                                                         y2=662)
                                 if not re:
-                                    re = imageFindClick('水晶残骸-4', confidence1=0.75, offsetX=2, x1=80, y1=177,
+                                    re = imageFindClick('残骸合金-3', confidence1=0.85, offsetX=2, x1=80, y1=177,
+                                                        x2=1245,
+                                                        y2=662)
+                                if not re:
+                                    re = imageFindClick('残骸合金-4', confidence1=0.85, offsetX=2, x1=80, y1=177,
+                                                        x2=1245,
+                                                        y2=662)
+                                if not re:
+                                    re = imageFindClick('残骸合金-5', confidence1=0.85, offsetX=2, x1=80, y1=177,
                                                         x2=1245,
                                                         y2=662)
                             if re:
+                                # 异常处理
+                                re, _ = TomatoOcrText(1171, 145, 1211, 171, '舰队')
+                                if re:
+                                    Toast('取消舰队管理')
+                                    tapSleep(328, 240, 1.5)
+
                                 Toast('点击残骸')
                                 sleep(1)
                                 for m in range(3):
@@ -251,27 +284,38 @@ def main():
                             isFind = True
                             fightType = '清道夫战斗群'
                         if re == -1:
+                            attack_failed = True  # 攻击失败，需要等待战斗
                             continue
                     if not isFind and 功能开关['清道夫舰队'] == 1:
                         Toast('寻找清道夫舰队')
-                        isFind = imageFindClick('清道夫舰队-1', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148,
-                                                x2=1151,
-                                                y2=628)
+                        isFind = imageFindClick('清道夫舰队-1', confidence1=0.85, offsetX=5, offsetY=3, x1=5, y1=171,
+                                                x2=1137, y2=637)
                         if not isFind:
-                            isFind = imageFindClick('清道夫舰队-2', confidence1=0.85, offsetX=5, offsetY=3, x1=82,
-                                                    y1=148,
-                                                    x2=1151,
-                                                    y2=628)
+                            isFind = imageFindClick('清道夫舰队-2', confidence1=0.85, offsetX=5, offsetY=3, x1=5,
+                                                    y1=171,
+                                                    x2=1137, y2=637)
                         if not isFind:
-                            isFind = imageFindClick('清道夫舰队-3', confidence1=0.85, offsetX=5, offsetY=3, x1=82,
-                                                    y1=148,
-                                                    x2=1151,
-                                                    y2=628)
+                            isFind = imageFindClick('清道夫舰队-2-2', confidence1=0.85, offsetX=5, offsetY=3, x1=5,
+                                                    y1=171,
+                                                    x2=1137, y2=637)
+                        if not isFind:
+                            isFind = imageFindClick('清道夫舰队-3', confidence1=0.85, offsetX=5, offsetY=3, x1=5,
+                                                    y1=171,
+                                                    x2=1137, y2=637)
+                        if not isFind:
+                            isFind = imageFindClick('清道夫舰队-4', confidence1=0.85, offsetX=5, offsetY=3, x1=5,
+                                                    y1=171,
+                                                    x2=1137, y2=637)
+                        if not isFind:
+                            isFind = imageFindClick('清道夫舰队-4-2', confidence1=0.85, offsetX=5, offsetY=3, x1=5,
+                                                    y1=171,
+                                                    x2=1137, y2=637)
                         if isFind:
                             Toast('目标获取-清道夫舰队')
                             fightType = '清道夫舰队'
-                            re = 选择舰队攻击(fightType)
-                            if not re:
+                            attack_result = 选择舰队攻击(fightType)
+                            if not attack_result:
+                                attack_failed = True  # 攻击失败，需要等待战斗
                                 continue
                     if not isFind:
                         Toast('未找到舰队')
@@ -322,110 +366,149 @@ def main():
                             Toast('返回')
                             tapSleep(91, 42, 1.5)  # 空白
                         else:
-                            break
+                            pass  # 继续执行后续逻辑
                 if not isFind:
                     Toast('未找到目标舰队')
                     continue
-                # tapSleep(re.x, re.y, 1)
-                failTimes = 0
-                for k in range(225):
-                    if fightType == '清道夫舰队':
-                        re = 寻找清道夫战斗群()
-                        if re == 1:
-                            fightType = '清道夫战斗群'
-                    re, _, _ = imageFind('00计时', confidence1=0.8)
-                    if not re:
-                        Toast(f'跃迁状态识别失败-{failTimes}/5')
-                        re, _, _ = imageFind('战斗中', confidence1=0.8, x1=1097, y1=314, x2=1266, y2=616)
-                        if re:
-                            Toast(f'进入战斗状态')
-                            break
-                        failTimes += 1
-                        sleep(0.5)
-                    if failTimes > 5:
-                        Toast('跃迁结束')
-                        break
-                    wait = 2 * k
-                    Toast(f'等待跃迁{wait}/450s')
-                    sleep(2)
 
-                failTimes = 0
-                isDone = False
-                for k in range(200):
-                    if fightType == '清道夫舰队':
-                        re = 寻找清道夫战斗群()
-                        if re == 1:
-                            fightType = '清道夫战斗群'
-                    re = FindColors.find(
-                        "1200,456,#A2070A|1198,463,#FFC9C9|1209,462,#FFC9C9|1210,478,#BC5D44|1198,476,#FFC9C9",
-                        rect=[1097, 314, 1266, 616], diff=0.95)
-                    if not re:
-                        re, _, _ = imageFind('战斗中', confidence1=0.8, x1=1097, y1=314, x2=1266, y2=616)
-                    if not re:
-                        Toast(f'战斗状态识别失败-{failTimes}/5')
-                        failTimes += 1
-                    if failTimes > 5:
-                        isDone = True
-                        Toast('战斗结束')
-                        break
-                    Toast('战斗中')
-                    sleep(2)
-                if isDone:
-                    break
+                # 检查是否遇到特殊条件需要等待战斗
+                should_wait_for_battle = False
 
-        if 功能开关['快速维修'] == 1:
-            re = imageFindClick('右侧菜单-2', confidence1=0.7, offsetX=2, x1=1114, y1=271, x2=1274,
-                                y2=640)
-            if not re:
-                re = FindColors.find("1200,457,#C3ECF8|1197,491,#B2B3B4|1200,457,#C3ECF8", diff=0.95)
-                if re:
-                    tapSleep(re.x, re.y)
-            if not re:
-                re = True
-                tapSleep(1180, 449)
-            if re:
-                re = TomatoOcrTap(1171, 145, 1211, 171, '舰队')
-                if re:
-                    re = TomatoOcrFindRangeClick('悬停召回', x1=792, y1=85, x2=1094, y2=145)
-                    if re:
-                        Toast('悬停召回')
-                    for k in range(30):
-                        re, _, _ = TomatoOcrFindRange('加速', x1=957, y1=142, x2=1085, y2=462)
+                # 如果没有可用的采集船，则等待战斗
+                if 'noCaiJi' in locals() and noCaiJi:
+                    should_wait_for_battle = True
+
+                # 如果攻击失败，则等待战斗
+                if 'attack_failed' in locals() and attack_failed:
+                    should_wait_for_battle = True
+
+                if should_wait_for_battle:
+                    # 等待跃迁和战斗完成
+                    failTimes = 0
+                    for k in range(225):
+                        if fightType == '清道夫舰队':
+                            re = 寻找清道夫战斗群()
+                            if re == 1:
+                                fightType = '清道夫战斗群'
+                        re, _, _ = imageFind('00计时', confidence1=0.8)
                         if not re:
-                            Toast('已召回')
-                            break
-                        re = TomatoOcrTap(1171, 145, 1211, 171, '舰队')
+                            re, _, _ = imageFind('00计时-2', confidence1=0.75)
                         if not re:
-                            Toast('非召回状态')
+                            Toast(f'跃迁状态识别失败-{failTimes}/5')
+                            re, _, _ = imageFind('战斗中', confidence1=0.8, x1=1097, y1=314, x2=1266, y2=616)
+                            if re:
+                                Toast(f'进入战斗状态')
+                                break
+                            failTimes += 1
+                            sleep(0.5)
+                        if failTimes > 5:
+                            Toast('跃迁结束')
                             break
-                        wait = k * 2
-                        Toast(f'等待召回{wait}/60s')
+                        wait = 2 * k
+                        Toast(f'等待跃迁{wait}/450s')
                         sleep(2)
-                    re = TomatoOcrFindRangeClick('快速维修', x1=959, y1=79, x2=1082, y2=274)
+
+                    failTimes = 0
+                    isDone = False
+                    for k in range(200):
+                        if fightType == '清道夫舰队':
+                            re = 寻找清道夫战斗群()
+                            if re == 1:
+                                fightType = '清道夫战斗群'
+                        re = FindColors.find(
+                            "1200,456,#A2070A|1198,463,#FFC9C9|1209,462,#FFC9C9|1210,478,#BC5D44|1198,476,#FFC9C9",
+                            rect=[1097, 314, 1266, 616], diff=0.95)
+                        if not re:
+                            re, _, _ = imageFind('战斗中', confidence1=0.8, x1=1097, y1=314, x2=1266, y2=616)
+                        if not re:
+                            Toast(f'战斗状态识别失败-{failTimes}/5')
+                            failTimes += 1
+                        if failTimes > 5:
+                            isDone = True
+                            Toast('战斗结束')
+                            break
+                        Toast('战斗中')
+                        sleep(2)
+                    # 战斗完成后清理标志
+                    if 'attack_failed' in locals():
+                        del attack_failed
+                # 战斗完成后执行快速维修
+                if 功能开关['快速维修'] == 1:
+                    re = imageFindClick('右侧菜单-2', confidence1=0.7, offsetX=2, x1=1114, y1=271, x2=1274,
+                                        y2=640)
+                    if not re:
+                        re = FindColors.find("1200,457,#C3ECF8|1197,491,#B2B3B4|1200,457,#C3ECF8", diff=0.95)
+                        if re:
+                            tapSleep(re.x, re.y)
+                    if not re:
+                        re = True
+                        tapSleep(1180, 449)
                     if re:
-                        Toast('快速维修')
-                    tapSleep(165, 385)  # 返回主页
+                        re = TomatoOcrTap(1171, 145, 1211, 171, '舰队')
+                        if re:
+                            re = TomatoOcrFindRangeClick('悬停召回', x1=792, y1=85, x2=1094, y2=145)
+                            if re:
+                                Toast('悬停召回')
+                            for k in range(30):
+                                re, _, _ = TomatoOcrFindRange('加速', x1=957, y1=142, x2=1085, y2=462)
+                                if not re:
+                                    Toast('已召回')
+                                    break
+                                re = TomatoOcrTap(1171, 145, 1211, 171, '舰队')
+                                if not re:
+                                    Toast('非召回状态')
+                                    break
+                                wait = k * 2
+                                Toast(f'等待召回{wait}/60s')
+                                sleep(2)
+                            if 功能开关['快速维修'] == 1:
+                                re = TomatoOcrFindRangeClick('快速维修', x1=959, y1=79, x2=1082, y2=274)
+                                if re:
+                                    Toast('快速维修')
+                                    TomatoOcrTap(611, 414, 671, 445, '确定')
+                            tapSleep(165, 385)  # 返回主页
+                continue  # 继续下一次循环
 
 
 def 选择舰队攻击(fightType=''):
     ifFind = False
+    sleep(1)
     for k in range(3):
         ifFind = TomatoOcrTap(897, 388, 962, 428, '攻击')
         if ifFind:
             break
         sleep(1)
     if not ifFind:
+        ifFind = TomatoOcrFindRangeClick('攻击', x1=785, y1=148, x2=1085, y2=605, offsetX=5, offsetY=8,
+                                         match_mode='fuzzy', sleep1=1)
+    if not ifFind:
         Toast('未找到攻击按钮')
         return False
-    re = TomatoOcrTap(1117, 114, 1197, 145, '快速维修', sleep1=1)
-    if not re:
-        re = TomatoOcrTap(1117, 115, 1199, 142, '快速维修', sleep1=1)
-    if not re:
-        re = TomatoOcrTap(1114, 117, 1208, 145, '快速维修', sleep1=1)
-    if re:
-        Toast('快速维修')
+    sleep(1)
+    if 功能开关['快速维修'] == 1:
+        re = TomatoOcrTap(1117, 114, 1197, 145, '快速维修', sleep1=1.5)
+        if not re:
+            re = TomatoOcrTap(1117, 115, 1199, 142, '快速维修', sleep1=1.5)
+        if not re:
+            re = TomatoOcrTap(1114, 117, 1208, 145, '快速维修', sleep1=1.5)
+        if not re:
+            re = TomatoOcrFindRangeClick('维修', x1=1077, y1=25, x2=1254, y2=600, offsetX=1, offsetY=1,
+                                         match_mode='fuzzy', sleep1=1.5)
+        if re:
+            Toast('快速维修')
+            TomatoOcrTap(611, 414, 671, 445, '确定')
     Toast('选择舰队')
     if 功能开关['智能分配'] == 1:
+        re, _, _ = TomatoOcrFindRange('母港', x1=994, y1=37, x2=1262, y2=677,
+                                      match_mode='fuzzy')
+        if not re:
+            re, _, _ = TomatoOcrFindRange('悬停', x1=994, y1=37, x2=1262, y2=677,
+                                          match_mode='fuzzy')
+        if not re:
+            Toast('无可用舰队')
+            sleep(0.5)
+            return False
+
         if fightType == '清道夫战斗群':
             Toast('精英，第一舰队攻击')
             tapSleep(1008, 140, 1.2)  # 点击第一舰队
@@ -438,25 +521,52 @@ def 选择舰队攻击(fightType=''):
                 tapSleep(1008, 140, 1.2)  # 点击第一舰队取消
     elif 功能开关['全部舰队'] == 1:
         Toast('全部舰队')
-        re = TomatoOcrFindRangeClick('全部', x1=768, y1=348, x2=1237, y2=711, offsetX=5, offsetY=8,
-                                     match_mode='fuzzy', sleep1=1)
+        re, _, _ = TomatoOcrFindRange('母港', x1=994, y1=37, x2=1262, y2=677,
+                                      match_mode='fuzzy')
+        if not re:
+            re, _, _ = TomatoOcrFindRange('悬停', x1=994, y1=37, x2=1262, y2=677,
+                                          match_mode='fuzzy')
+        if not re:
+            Toast('无可用舰队')
+            return False
+        re = TomatoOcrTap(662, 620, 748, 651, '选择全部', offsetX=5, offsetY=8)
+        if not re:
+            re = TomatoOcrFindRangeClick('全部', x1=768, y1=348, x2=1237, y2=711, offsetX=5, offsetY=3,
+                                         match_mode='fuzzy', sleep1=1)
     elif 功能开关['单独派遣'] == 1:
         Toast('单独派遣')
-        re = TomatoOcrFindRangeClick('母港', x1=1102, y1=71, x2=1231, y2=705, offsetX=5, offsetY=8,
+        re, _, _ = TomatoOcrFindRange('母港', x1=994, y1=37, x2=1262, y2=677,
+                                      match_mode='fuzzy')
+        if not re:
+            re, _, _ = TomatoOcrFindRange('悬停', x1=994, y1=37, x2=1262, y2=677,
+                                          match_mode='fuzzy')
+        if not re:
+            Toast('无可用舰队')
+            return False
+
+        re = TomatoOcrFindRangeClick('母港', x1=994, y1=37, x2=1262, y2=677, offsetX=5, offsetY=8,
                                      match_mode='fuzzy', sleep1=1)
+        if not re:
+            re = TomatoOcrFindRangeClick('悬停', x1=994, y1=37, x2=1262, y2=677, offsetX=5, offsetY=8,
+                                         match_mode='fuzzy', sleep1=1)
         if not re:
             Toast('单独派遣失败，选择默认舰队')
             re = TomatoOcrFindRangeClick('全部', x1=768, y1=348, x2=1237, y2=711, offsetX=5, offsetY=8,
                                          match_mode='fuzzy', sleep1=1)
     else:
         Toast('选择默认舰队')
-        re = TomatoOcrFindRangeClick('母港', x1=1102, y1=71, x2=1231, y2=705, offsetX=5, offsetY=8,
+        re = TomatoOcrFindRangeClick('母港', x1=994, y1=37, x2=1262, y2=677,
                                      match_mode='fuzzy', sleep1=1)
+        if not re:
+            re = TomatoOcrFindRangeClick('悬停', x1=994, y1=37, x2=1262, y2=677,
+                                         match_mode='fuzzy', sleep1=1)
         if not re:
             tapSleep(1008, 140, 1.2)  # 点击第一舰队
     re = TomatoOcrTap(1025, 617, 1082, 651, '确定', offsetX=5, offsetY=8)
     if not re:
         re = TomatoOcrTap(874, 621, 920, 647, '确定', offsetX=5, offsetY=8)
+    if not re:
+        re = TomatoOcrTap(868, 617, 928, 654, '确定', offsetX=5, offsetY=8)
     if not re:
         re = TomatoOcrFindRangeClick('确定', x1=651, y1=459, x2=1117, y2=702, offsetX=5, offsetY=8)
     if not re:
@@ -471,43 +581,37 @@ def 选择舰队攻击(fightType=''):
 
 
 def 寻找清道夫战斗群():
-    isFind = imageFindClick('清道夫战斗群-1', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148,
-                            x2=1151,
-                            y2=628)
+    isFind = imageFindClick('清道夫战斗群-1', confidence1=0.85, offsetX=5, offsetY=3, x1=5, y1=171,
+                            x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('清道夫战斗群-2', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('清道夫战斗群-2', confidence1=0.85, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('清道夫战斗群-3', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('清道夫战斗群-3', confidence1=0.85, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('舰队4级', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('舰队4级', confidence1=0.85, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('舰队4级-2', confidence1=0.8, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('舰队4级-2', confidence1=0.8, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('舰队4级-3', confidence1=0.85, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('舰队4级-3', confidence1=0.85, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('舰队4级-4', confidence1=0.8, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('舰队4级-4', confidence1=0.8, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if not isFind:
-        isFind = imageFindClick('舰队', confidence1=0.7, offsetX=5, offsetY=3, x1=82, y1=148,
-                                x2=1151,
-                                y2=628)
+        isFind = imageFindClick('舰队', confidence1=0.7, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if isFind:
         Toast('目标获取-清道夫战斗群')
         fightType = '清道夫战斗群'
         re = 选择舰队攻击(fightType)
         if not re:
+            Toast('清道夫战斗群-寻找失败')
             return -1
+        Toast('清道夫战斗群-寻找成功')
         return 1
     return 0
 

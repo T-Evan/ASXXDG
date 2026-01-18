@@ -196,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-                <label for="选择舰队">出动舰队:</label><label class="gray-text">（默认勾选第一个舰队）</label>
+                <label for="选择舰队">出动舰队:</label><label class="gray-text">（默认单独派遣）</label>
                 <div class="flex-container">
                     <div class="checkbox-item">
                         <input id="全部舰队" name="vehicle" type="checkbox" value="Bike">全部舰队<br>
@@ -226,6 +226,9 @@
                         </div>
                         <div class="checkbox-item">
                             <input id="水晶残骸" name="vehicle" type="checkbox" value="Bike">水晶残骸<br>
+                        </div>
+                        <div class="checkbox-item">
+                            <input id="合金残骸" name="vehicle" type="checkbox" value="Bike">合金残骸<br>
                         </div>
                     </div>
                 </div>
@@ -407,6 +410,7 @@
         setSwitchStatus("采集残骸");
         setSwitchStatus("舰队残骸");
         setSwitchStatus("水晶残骸");
+        setSwitchStatus("合金残骸");
         setSwitchStatus("快速维修");
 
     }
@@ -456,6 +460,7 @@
         采集残骸 = saveSwitchStatus("采集残骸");
         舰队残骸 = saveSwitchStatus("舰队残骸");
         水晶残骸 = saveSwitchStatus("水晶残骸");
+        合金残骸 = saveSwitchStatus("合金残骸");
         快速维修 = saveSwitchStatus("快速维修");
 
         var data = {
@@ -469,6 +474,7 @@
             采集残骸: 采集残骸,
             舰队残骸: 舰队残骸,
             水晶残骸: 水晶残骸,
+            合金残骸: 合金残骸,
             快速维修: 快速维修,
         };
 
