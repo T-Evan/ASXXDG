@@ -60,9 +60,9 @@ def main():
                     tapSleep(362, 8, 1.5)
 
                 if 功能开关['仅寻找当前位置'] == 0:
-                    re = TomatoOcrTap(1015, 650, 1061, 679, '星系', sleep1=6, offsetX=5, offsetY=5)
+                    re = TomatoOcrTap(1013,648,1063,680, '星系', sleep1=6, offsetX=5, offsetY=5)
                     if not re:
-                        re = TomatoOcrTap(1185, 651, 1228, 680, '星系', sleep1=6, offsetX=5, offsetY=5)
+                        re = TomatoOcrFindRangeClick(923,606,1247,712, '星系', sleep1=6, offsetX=5, offsetY=5)
                     if re:
                         Toast('进入星系')
                     if not re:
@@ -80,9 +80,9 @@ def main():
                             Toast('关闭任务页面')
                         Toast('重置星系页面')
                         failCt = failCt + 1
-                        re = TomatoOcrTap(1186, 650, 1223, 674, '星', sleep1=4, match_mode='fuzzy')
+                        re = TomatoOcrTap(1180,647,1238,684, '星系', sleep1=4, match_mode='fuzzy')
                         if not re:
-                            re = TomatoOcrFindRangeClick('星系', x1=792, y1=85, x2=1094, y2=145)
+                            re = TomatoOcrFindRangeClick('星系', x1=923, y1=606, x2=1247, y2=712)
                         continue
 
                 failCt = 0
