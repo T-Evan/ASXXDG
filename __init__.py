@@ -604,6 +604,15 @@ def 寻找清道夫战斗群():
     if not isFind:
         isFind = imageFindClick('舰队', confidence1=0.7, offsetX=5, offsetY=3, x1=5, y1=171,
                                 x2=1137, y2=637)
+    if not isFind:
+        isFind = imageFindClick('首领清道夫战斗群', confidence1=0.7, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
+    if not isFind:
+        isFind = imageFindClick('首领清道夫战斗群-2', confidence1=0.7, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
+    if not isFind:
+        isFind = imageFindClick('首领清道夫战斗群-3', confidence1=0.7, offsetX=5, offsetY=3, x1=5, y1=171,
+                                x2=1137, y2=637)
     if isFind:
         Toast('目标获取-清道夫战斗群')
         fightType = '清道夫战斗群'
