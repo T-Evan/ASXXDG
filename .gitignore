@@ -1,3 +1,6 @@
 .vscode/.ascript-sync.json
 .idea/
-.__pycache__/
+__pycache__/
+.claude/
+.cursor/
+.observer.lock
