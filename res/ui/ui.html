@@ -1,261 +1,599 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
-      xmlns="http://www.w3.org/1999/html">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="layui/css/layui.css">
     <title>新星帝国</title>
     <style>
-        #shouye:checked ~ ul li.richang_content {
-            display: none;
+        :root {
+            --bg-primary: #05080c;
+            --bg-panel: rgba(8, 16, 26, 0.95);
+            --border-cyan: rgba(0, 212, 255, 0.28);
+            --accent-cyan: #00d4ff;
+            --accent-green: #00ff9d;
+            --accent-orange: #ff9500;
+            --text-primary: #e6f7ff;
+            --text-muted: #6a8aaa;
+            --font-mono: 'Courier New', 'Noto Sans SC', monospace;
+            --font-body: 'Segoe UI', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
         }
-        #shouye:checked ~ ul li.yingdi_content {
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 13px;
+            line-height: 1.45;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            height: 44px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.12) 0%, rgba(5, 8, 12, 0.6) 100%);
+            border-bottom: 1px solid var(--border-cyan);
+            box-shadow: 0 2px 14px rgba(0, 212, 255, 0.12);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+            margin: 0;
+        }
+
+        .countdown-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 24px;
+            padding: 0 8px;
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid var(--border-cyan);
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-green);
+            text-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
+            box-shadow: inset 0 0 10px rgba(0, 212, 255, 0.08);
+        }
+
+        /* Tabs */
+        .tab-bar {
+            display: flex;
+            position: fixed;
+            top: 44px;
+            left: 0;
+            width: 100%;
+            height: 36px;
+            background: rgba(5, 8, 12, 0.98);
+            border-bottom: 1px solid var(--border-cyan);
+            z-index: 99;
+        }
+
+        .tab-input {
             display: none;
         }
 
-        #richang:checked ~ ul li.shouye_content {
-            display: none;
-        }
-
-        form input {
-            margin-top: 6px;
-            margin-bottom: 6px;
-            margin-right: 3px;
-            height: 16px;
-            width: 16px;
+        .tab-label {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
             position: relative;
-            top: 2px;
+            transition: color 0.18s ease, background 0.18s ease;
+            letter-spacing: 2px;
         }
 
-        label:hover {
-            background-color: cyan;
-            color: dodgerblue;
+        .tab-label:hover {
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.06);
         }
 
-        h3 {
-            color: rgb(0,150,255);
+        .tab-label::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 6px var(--accent-cyan);
+            transition: width 0.18s ease, left 0.18s ease;
         }
 
-        h4 {
-            color: rgb(0,150,255);
-        }
-        legend {
-            color: rgb(0,150,255);
-        }
-
-    .checkbox-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px; /* 添加间距以分隔复选框 */
-    }
-    .checkbox-item {
-        display: flex;
-        z-index: 2;
-        align-items: center;
-    }
-
-    .gray-text {
-        color: gray;
-    }
-
-     #countdown {
-            margin-top: 10px;
-            font-size: 18px;
-            color: rgb(0,150,255);
+        #shouye:checked ~ .tab-bar .tab-label[for="shouye"],
+        #richang:checked ~ .tab-bar .tab-label[for="richang"] {
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
         }
 
-    .flex-container {
-        display: flex;
-        align-items: center; /* 垂直居中 */
-    }
-    label {
-        margin-right: 10px; /* 为输入框留出一点空间 */
-    }
+        #shouye:checked ~ .tab-bar .tab-label[for="shouye"]::after,
+        #richang:checked ~ .tab-bar .tab-label[for="richang"]::after {
+            left: 10%;
+            width: 80%;
+        }
 
-    .shouye_container {
-    display: flex;
-    align-items: center; /* 水平居中 */
-    }
+        /* Tab content switching */
+        #shouye:checked ~ .content-wrap .richang_content,
+        #richang:checked ~ .content-wrap .shouye_content {
+            display: none;
+        }
 
-    .shouye_item {
-        flex: 1; /* 均分宽度 */
-        text-align: center; /* 文本居中 */
-        margin: 0 10px; /* 添加一些间距 */
-    }
+        /* Content area */
+        .content-wrap {
+            margin: 0;
+            padding: 92px 12px 68px 12px;
+            list-style: none;
+            width: 100%;
+        }
 
-    .toast {
-        position: fixed;
-        bottom: 70px;
-        right: 20px;
-        background-color: #4caf50;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-    }
+        .tab-panel {
+            display: block;
+        }
 
-    .show {
-        opacity: 1;
-    }
+        /* Panels */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-cyan);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 24px rgba(0, 212, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
 
-/* 头部样式 */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #1E9FFF;
-    height: 50px; /* 增加高度 */
-    width: 100%;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 8;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
-    transition: background-color 0.3s ease; /* 平滑过渡效果 */
-}
+        .panel-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.12) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-cyan);
+        }
 
-.header:hover {
-    background-color: #1C86EE; /* 鼠标悬停时改变背景颜色 */
-}
+        .panel-header::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 12px;
+            background: var(--accent-cyan);
+            margin-right: 8px;
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
 
-.header h3 {
-    color: white;
-    font-size: 1.2em; /* 增大字体大小 */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 添加文字阴影 */
-    margin-bottom: 13px;
-}
+        .panel-title {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            margin: 0;
+        }
 
-/* 按钮标签样式 */
-.button-label {
-    position: fixed;
-    left: 0;
-    width: 50%;
-    height: 28px;
-    color: #1E9FFF;
-    background-color: white;
-    border: 2px solid #1E9FFF;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 16px;
-    z-index: 8;
-    cursor: pointer; /* 鼠标指针变为手形 */
-    transition: background-color 0.3s ease, color 0.3s ease; /* 平滑过渡效果 */
-}
+        .panel-body {
+            padding: 12px;
+        }
 
-/* 鼠标悬停时的样式 */
-.button-label:hover {
-    background-color: #1E9FFF;
-    color: white;
-}
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-/* 鼠标点击时的样式 */
-.button-label:active {
-    background-color: #1C86EE;
-    color: white;
-}
+        .section-title::before {
+            content: '▸';
+            color: var(--accent-cyan);
+            font-size: 12px;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-cyan), transparent);
+            margin: 12px 0;
+            border: none;
+        }
+
+        /* Checkbox system */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            margin: 0 6px 0 0;
+            border: 1px solid var(--border-cyan);
+            border-radius: 3px;
+            background: rgba(0, 212, 255, 0.08);
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked {
+            background: rgba(0, 212, 255, 0.25);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid var(--accent-cyan);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-item input[type="checkbox"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+        }
+
+        .checkbox-item label {
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.18s ease;
+        }
+
+        .checkbox-item:hover label {
+            color: var(--accent-cyan);
+        }
+
+        .checkbox-item:hover input[type="checkbox"] {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 6px rgba(0, 212, 255, 0.25);
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            line-height: 1.35;
+        }
+
+        .inline-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 6px;
+        }
+
+        /* Flex containers for inline labels and checkboxes */
+        .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .control-label {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Other tab placeholder */
+        .standby-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+            text-align: center;
+            min-height: 180px;
+        }
+
+        .standby-icon {
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--border-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.12), inset 0 0 12px rgba(0, 212, 255, 0.06);
+        }
+
+        .standby-icon::before {
+            content: '◈';
+            font-size: 24px;
+            color: var(--accent-cyan);
+        }
+
+        .standby-title {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            margin: 0 0 8px 0;
+        }
+
+        .standby-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Bottom actions */
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 52px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 0 12px;
+            background: linear-gradient(0deg, rgba(5, 8, 12, 1) 0%, rgba(5, 8, 12, 0.85) 60%, transparent 100%);
+            z-index: 100;
+        }
+
+        .btn {
+            flex: 1;
+            height: 36px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.16);
+        }
+
+        .btn-secondary:active {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.9) 0%, rgba(0, 180, 220, 0.95) 100%);
+            color: #001018;
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.24);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 14px rgba(0, 212, 255, 0.32);
+            filter: brightness(1.04);
+        }
+
+        .btn-primary:active {
+            filter: brightness(0.95);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 72px;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: rgba(10, 24, 36, 0.98);
+            color: var(--accent-green);
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border-cyan);
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 212, 255, 0.15);
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
-<body style="margin: 0;padding: 0;list-style: none;text-decoration: none;">
+<body>
+
 <div class="header">
-    <h3 style="margin-left:110px;">新星帝国</h3>
-    <h3 style="margin-left:95px;margin-bottom:20px;color:#98FB98" id="countdown">00</h3>
+    <h3 class="header-title">新星帝国</h3>
+    <div class="countdown-badge" id="countdown">00</div>
 </div>
-<div style="height: 36px; width: 100%;">
+
+<input checked id="shouye" name="sexx" type="radio" class="tab-input">
+<input id="richang" name="sexx" type="radio" class="tab-input">
+
+<div class="tab-bar">
+    <label class="tab-label" for="shouye">首页</label>
+    <label class="tab-label" for="richang">其他</label>
 </div>
-<div>
-    <input checked id="shouye" name="sexx" style="display: none;z-index:8;" type="radio">
-    <input id="richang" name="sexx" style="display: none;z-index:8;" type="radio">
-    <label class="button-label" for="shouye">
-        首页
-    </label>
-    <label class="button-label" for="richang"
-           style="left: 50%;">
-        其他
-    </label>
-    <ul style="margin:0px 3px;padding: 0px;width:100%;">
-        <div style="height: 35px; width: 100%;background-color: white;"></div>
-        <div id="toast" class="toast">保存成功</div>
-        <li class="shouye_content">
-            <fieldset>
-                <legend>星系探索</legend>
-                <div class="checkbox-item">
-                    <input id="攻击舰队" name="vehicle" type="checkbox" value="Bike">攻击舰队<br>
-                </div>
-                <div class="flex-container">
-                    <label for="攻击目标">攻击目标:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input id="清道夫舰队" name="vehicle" type="checkbox" value="Bike">清道夫舰队<br>
-                        </div>
-                        <div class="checkbox-item">
-                            <input id="清道夫战斗群" name="vehicle" type="checkbox" value="Bike">清道夫战斗群<br>
-                        </div>
-                    </div>
-                </div>
-                <label for="选择舰队">出动舰队:</label><label class="gray-text">（默认单独派遣）</label>
-                <div class="flex-container">
+
+<ul class="content-wrap">
+    <div id="toast" class="toast">保存成功</div>
+
+    <li class="shouye_content tab-panel">
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title">星系探索</h3>
+            </div>
+            <div class="panel-body">
+                <div class="section-title">战斗模式</div>
+                <div class="checkbox-row">
                     <div class="checkbox-item">
-                        <input id="全部舰队" name="vehicle" type="checkbox" value="Bike">全部舰队<br>
-                    </div>
-                    <div class="checkbox-item">
-                        <input id="单独派遣" name="vehicle" type="checkbox" value="Bike">单独派遣<br>
-                    </div>
-                    <div class="checkbox-item">
-                        <input id="智能分配" name="vehicle" type="checkbox" value="Bike">智能分配<br>
+                        <input id="攻击舰队" name="vehicle" type="checkbox" value="Bike">
+                        <label for="攻击舰队">攻击舰队</label>
                     </div>
                 </div>
-                <label class="gray-text">（智能分配：一队等待精英清道夫，其余队打小型清道夫）</label>
-                <div class="flex-container">
-                    <label for="寻怪方式">寻怪方式:</label><label class="gray-text">（默认滑动寻找）</label>
-                    <div class="checkbox-item">
-                        <input id="仅寻找当前位置" name="vehicle" type="checkbox" value="Bike">仅寻找当前位置<br>
-                    </div>
-                </div>
-                <div class="checkbox-item">
-                    <input id="采集残骸" name="vehicle" type="checkbox" value="Bike">采集残骸<br>
-                </div>
-                <div class="flex-container">
-                    <label for="采集目标">采集目标:</label>
-                    <div class="checkbox-group">
+                <div class="control-row" style="margin-top:6px;">
+                    <span class="control-label">攻击目标:</span>
+                    <div class="checkbox-row" style="margin:0;">
                         <div class="checkbox-item">
-                            <input id="舰队残骸" name="vehicle" type="checkbox" value="Bike">舰队残骸<br>
+                            <input id="清道夫舰队" name="vehicle" type="checkbox" value="Bike">
+                            <label for="清道夫舰队">清道夫舰队</label>
                         </div>
                         <div class="checkbox-item">
-                            <input id="水晶残骸" name="vehicle" type="checkbox" value="Bike">水晶残骸<br>
-                        </div>
-                        <div class="checkbox-item">
-                            <input id="合金残骸" name="vehicle" type="checkbox" value="Bike">合金残骸<br>
+                            <input id="清道夫战斗群" name="vehicle" type="checkbox" value="Bike">
+                            <label for="清道夫战斗群">清道夫战斗群</label>
                         </div>
                     </div>
                 </div>
-                <div class="checkbox-item">
-                    <input id="快速维修" name="vehicle" type="checkbox" value="Bike">快速维修<br>
+
+                <div class="section-divider"></div>
+                <div class="section-title">舰队派遣</div>
+                <div class="control-row">
+                    <span class="control-label">出动舰队:</span>
+                    <span class="inline-hint">（默认单独派遣）</span>
                 </div>
-            </fieldset>
-        </li>
-        <li class="richang_content">
-        </li>
-    </ul>
+                <div class="checkbox-row">
+                    <div class="checkbox-item">
+                        <input id="全部舰队" name="vehicle" type="checkbox" value="Bike">
+                        <label for="全部舰队">全部舰队</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input id="单独派遣" name="vehicle" type="checkbox" value="Bike">
+                        <label for="单独派遣">单独派遣</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input id="智能分配" name="vehicle" type="checkbox" value="Bike">
+                        <label for="智能分配">智能分配</label>
+                    </div>
+                </div>
+                <div class="hint-text">智能分配：一队等待精英清道夫，其余队打小型清道夫</div>
+
+                <div class="section-divider"></div>
+                <div class="section-title">寻怪与采集</div>
+                <div class="control-row">
+                    <span class="control-label">寻怪方式:</span>
+                    <span class="inline-hint">（默认滑动寻找）</span>
+                    <div class="checkbox-item">
+                        <input id="仅寻找当前位置" name="vehicle" type="checkbox" value="Bike">
+                        <label for="仅寻找当前位置">仅寻找当前位置</label>
+                    </div>
+                </div>
+                <div class="checkbox-row" style="margin-top:6px;">
+                    <div class="checkbox-item">
+                        <input id="采集残骸" name="vehicle" type="checkbox" value="Bike">
+                        <label for="采集残骸">采集残骸</label>
+                    </div>
+                </div>
+                <div class="control-row" style="margin-top:8px;">
+                    <span class="control-label">采集目标:</span>
+                    <div class="checkbox-row" style="margin:0;">
+                        <div class="checkbox-item">
+                            <input id="舰队残骸" name="vehicle" type="checkbox" value="Bike">
+                            <label for="舰队残骸">舰队残骸</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input id="水晶残骸" name="vehicle" type="checkbox" value="Bike">
+                            <label for="水晶残骸">水晶残骸</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input id="合金残骸" name="vehicle" type="checkbox" value="Bike">
+                            <label for="合金残骸">合金残骸</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+                <div class="section-title">维护</div>
+                <div class="checkbox-row">
+                    <div class="checkbox-item">
+                        <input id="快速维修" name="vehicle" type="checkbox" value="Bike">
+                        <label for="快速维修">快速维修</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </li>
+
+    <li class="richang_content tab-panel">
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title">系统状态</h3>
+            </div>
+            <div class="panel-body standby-panel">
+                <div class="standby-icon"></div>
+                <h4 class="standby-title">系统待机中</h4>
+                <p class="standby-subtitle">待命区域 · 更多模块准备加载</p>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<div class="action-bar">
+    <button id="guanbi" class="btn btn-secondary" onclick="wclose()" type="button" value="关闭">退出</button>
+    <button id="queding" class="btn btn-primary" onclick="submit()" type="button" value="确定">运行</button>
 </div>
-<div style="  display: flex; margin-bottom: 30px; align-items: center;justify-content: center; width: 100%; height: 46px; position: sticky;">
-    <button id="guanbi" onclick="wclose()"
-            style="flex: 1;height: 40px;color: #1E9FFF; background-color: white;border: 2px solid #1E9FFF; border-radius: 5px;font-size: 16px;"
-            type="button"
-            value="关闭">
-        退出
-    </button>
-    <button id="queding" onclick="submit()"
-            style="flex: 1;height: 40px;color: white; background-color: #1E9FFF;border: 2px solid #1E9FFF; border-radius: 5px;font-size: 16px;"
-            type="button"
-            value="确定">
-        运行
-    </button>
-</div>
-<!-- 引入 layui.js 的 <script> 标签最好放置在 html 末尾 -->
+
 <script src="layui/layui.js"></script>
 <script src="layui/jquery-3.6.1.js"></script>
 <script type="text/javascript">
@@ -263,17 +601,17 @@
     function saveSwitchStatus(id) {
         var isChecked = document.getElementById(id).checked;
         localStorage.setItem(id, isChecked);
-        return isChecked
+        return isChecked;
     }
 
     function deleteAllItems(configNum) {
         localStorage.clear();
         console.log('当前配置 已清空');
-        setAllItems()
+        setAllItems();
     }
 
     function saveConfigItems(configNum) {
-        saveAllItems()
+        saveAllItems();
         const allItems = {};
 
         for (let i = 0; i < localStorage.length; i++) {
@@ -286,50 +624,48 @@
         const jsonString = JSON.stringify(allItems, null, 2);
         localStorage.setItem('config' + configNum, jsonString);
 
-<!--        console.log('All Items:', localStorage.getItem("config1"));-->
-        showToast('保存成功')
+        showToast('保存成功');
     }
 
-     function showToast(message) {
+    function showToast(message) {
         var toast = document.getElementById('toast');
-        toast.innerHTML = message; // 设置 toast 的内容
+        toast.innerHTML = message;
         toast.classList.add('show');
 
         setTimeout(function() {
             toast.classList.remove('show');
-        }, 2000); // 3秒后自动隐藏
+        }, 2000);
     }
 
     function toggleInviteToast() {
-        var isChecked = document.getElementById('秘境自动接收邀请').checked;
-        var isChecked2 = document.getElementById('恶龙自动接收邀请').checked;
-        var isChecked3 = document.getElementById('梦魇自动接收邀请').checked;
-        var isChecked4 = document.getElementById('绝境自动接收邀请').checked;
-        var isChecked5 = document.getElementById('暴走自动接收邀请').checked;
-        var isChecked6 = document.getElementById('终末战自动接收邀请').checked;
-        var isChecked7 = document.getElementById('三魔头自动接收邀请').checked;
-        if (isChecked || isChecked2 || isChecked3 || isChecked4 || isChecked5 || isChecked6 || isChecked7) {
+        var inviteIds = ['秘境自动接收邀请', '恶龙自动接收邀请', '梦魇自动接收邀请', '绝境自动接收邀请', '暴走自动接收邀请', '终末战自动接收邀请', '三魔头自动接收邀请'];
+        var hasInviteEnabled = inviteIds.some(function(id) {
+            var element = document.getElementById(id);
+            return element ? element.checked : false;
+        });
+
+        if (hasInviteEnabled) {
             showToast('开启自动接收组队邀请，自动任务将暂停执行');
         }
     }
 
     function toggleAIStartToast() {
-        var isChecked = document.getElementById('AI进入战斗后启动').checked;
-        var isChecked2 = document.getElementById('暴走进入战斗后启动').checked;
-        var isChecked3 = document.getElementById('技能进入战斗后启动').checked;
-        if (isChecked || isChecked2 || isChecked3) {
+        var aiStartIds = ['AI进入战斗后启动', '暴走进入战斗后启动', '技能进入战斗后启动'];
+        var hasAIStartEnabled = aiStartIds.some(function(id) {
+            var element = document.getElementById(id);
+            return element ? element.checked : false;
+        });
+
+        if (hasAIStartEnabled) {
             showToast('开启进入战斗后启动，自动任务将暂停执行');
         }
     }
 
     function shuaZanAllItems() {
-        const jsonString = '{"副本自动接收邀请":"false","聊天内容开关":"false","仅S评开启":"false","不开宝箱":"true","圣兽试炼":"false","混沌侵袭":"false","无次数继续":"true","日常副本重复挑战次数":"10","日常副本补充次数":"0","顶号等待":"20","日常总开关":true,"自动主线":false,"副本总开关":true,"幻想阶梯":false,"日常副本":true,"地图探索":false,"魔物讨伐":false,"金币探索":false,"粗炼石探索":false,"时之砂探索":false,"历战精华探索":false,"探索次数":"","素材秘境":false,"日常任务领取":false,"自动更换装备":false,"自动强化装备":false,"小推车领取":true,"小木床领取":true,"命运之树领取":true,"邮件领取":false,"每日商店":false,"每日签到":false,"成长试炼":false,"启程签到":false,"菜就多躺":false,"巡礼之证":false,"每日特惠":false,"本周精选":false,"月卡领取":false,"秘宝大作战":false,"其他签到活动":false,"公会总开关":false,"公会捐赠":false,"鸡舍打扫":false,"购买鸡仔":false,"饲养鸡仔":false,"公会讨伐":false,"公会战":false,"公会挂机奖励":false}'
+        const jsonString = '{"副本自动接收邀请":"false","聊天内容开关":"false","仅S评开启":"false","不开宝箱":"true","圣兽试炼":"false","混沌侵袭":"false","无次数继续":"true","日常副本重复挑战次数":"10","日常副本补充次数":"0","顶号等待":"20","日常总开关":true,"自动主线":false,"副本总开关":true,"幻想阶梯":false,"日常副本":true,"地图探索":false,"魔物讨伐":false,"金币探索":false,"粗炼石探索":false,"时之砂探索":false,"历战精华探索":false,"探索次数":"","素材秘境":false,"日常任务领取":false,"自动更换装备":false,"自动强化装备":false,"小推车领取":true,"小木床领取":true,"命运之树领取":true,"邮件领取":false,"每日商店":false,"每日签到":false,"成长试炼":false,"启程签到":false,"菜就多躺":false,"巡礼之证":false,"每日特惠":false,"本周精选":false,"月卡领取":false,"秘宝大作战":false,"其他签到活动":false,"公会总开关":false,"公会捐赠":false,"鸡舍打扫":false,"购买鸡仔":false,"饲养鸡仔":false,"公会讨伐":false,"公会战":false,"公会挂机奖励":false}';
         if (jsonString) {
             try {
-<!--                console.log('读取的配置:', jsonString);-->
-                const configData = JSON.parse(jsonString); // 将 JSON 字符串转换回对象
-
-                // 遍历 configData 对象的每个键值对
+                const configData = JSON.parse(jsonString);
                 for (const key in configData) {
                     if (configData.hasOwnProperty(key)) {
                         if (!key.includes('config') && !key.includes('账号') && !key.includes('角色') && !key.includes('激活码') && !key.includes('配置')) {
@@ -337,8 +673,8 @@
                         }
                     }
                 }
-                setAllItems()
-                showToast('加载默认配置成功，请继续调整')
+                setAllItems();
+                showToast('加载默认配置成功，请继续调整');
             } catch (error) {
                 console.error('解析 JSON 失败:', error);
             }
@@ -351,10 +687,7 @@
         const jsonString = localStorage.getItem('config' + configNum);
         if (jsonString) {
             try {
-<!--                console.log('读取的配置:', jsonString);-->
-                const configData = JSON.parse(jsonString); // 将 JSON 字符串转换回对象
-
-                // 遍历 configData 对象的每个键值对
+                const configData = JSON.parse(jsonString);
                 for (const key in configData) {
                     if (configData.hasOwnProperty(key)) {
                         if (!key.includes('config') && !key.includes('账号') && !key.includes('角色') && !key.includes('激活码') && !key.includes('配置')) {
@@ -362,8 +695,8 @@
                         }
                     }
                 }
-                setAllItems()
-                showToast('加载成功')
+                setAllItems();
+                showToast('加载成功');
             } catch (error) {
                 console.error('解析 JSON 失败:', error);
             }
@@ -373,27 +706,34 @@
     }
 
     let isAutoClicked = false;
+    let autoClickIntervalId = null;
+
     function autoClickButton() {
         const button = document.getElementById('queding');
         const countdownElement = document.getElementById('countdown');
 
         if (button && countdownElement) {
+            if (autoClickIntervalId) {
+                clearInterval(autoClickIntervalId);
+            }
+
             let remainingTime = 30;
             countdownElement.textContent = `${remainingTime}`;
 
-            const intervalId = setInterval(() => {
+            autoClickIntervalId = setInterval(() => {
                 remainingTime--;
                 countdownElement.textContent = `${remainingTime}`;
 
                 if (remainingTime <= 0) {
-                    clearInterval(intervalId);
+                    clearInterval(autoClickIntervalId);
+                    autoClickIntervalId = null;
                     if (!isAutoClicked) {
-                        button.click();  // 触发按钮的点击事件
+                        button.click();
                         console.log("按钮已点击");
                         isAutoClicked = true;
                     }
                 }
-            }, 1000);  // 每秒更新一次倒计时
+            }, 1000);
         } else {
             console.error("未找到按钮或倒计时元素");
         }
@@ -412,56 +752,60 @@
         setSwitchStatus("水晶残骸");
         setSwitchStatus("合金残骸");
         setSwitchStatus("快速维修");
-
     }
 
     window.onload = function () {
         console.log("窗口加载成功了");
         autoClickButton();
         airscript.call("加载", "成功");
-        setAllItems()
+        setAllItems();
     };
 
     layui.use(['form'], function(){
       var form = layui.form;
 
-      // 监听秘境选择框的选择事件
       form.on('select(mijing1-filter)', function(data){
         var mjId = data.value;
         console.log(mjId);
         var $mjgqSelect = $('#秘境关卡');
 
+        if (!$mjgqSelect.length) {
+          return;
+        }
+
         if(mjId === '原野') {
           $mjgqSelect.html('<option value="古遗迹上的幽影">古遗迹上的幽影</option>');
         }
 
-        form.render('select'); // 更新城市选择框的UI
+        form.render('select');
       });
     });
 
-    // 定义一个函数用于处理开关的状态设置
     function setSwitchStatus(id) {
         var itemValue = localStorage.getItem(id);
         document.getElementById(id).checked = itemValue === "true";
     }
 
     function xgip(xip) {
-        document.getElementById("bjip").innerHTML = xip;
+        var target = document.getElementById("bjip");
+        if (target) {
+            target.innerHTML = xip;
+        }
     }
 
     function saveAllItems() {
-        攻击舰队 = saveSwitchStatus("攻击舰队");
-        清道夫舰队 = saveSwitchStatus("清道夫舰队");
-        清道夫战斗群 = saveSwitchStatus("清道夫战斗群");
-        全部舰队 = saveSwitchStatus("全部舰队");
-        智能分配 = saveSwitchStatus("智能分配");
-        单独派遣 = saveSwitchStatus("单独派遣");
-        仅寻找当前位置 = saveSwitchStatus("仅寻找当前位置");
-        采集残骸 = saveSwitchStatus("采集残骸");
-        舰队残骸 = saveSwitchStatus("舰队残骸");
-        水晶残骸 = saveSwitchStatus("水晶残骸");
-        合金残骸 = saveSwitchStatus("合金残骸");
-        快速维修 = saveSwitchStatus("快速维修");
+        var 攻击舰队 = saveSwitchStatus("攻击舰队");
+        var 清道夫舰队 = saveSwitchStatus("清道夫舰队");
+        var 清道夫战斗群 = saveSwitchStatus("清道夫战斗群");
+        var 全部舰队 = saveSwitchStatus("全部舰队");
+        var 智能分配 = saveSwitchStatus("智能分配");
+        var 单独派遣 = saveSwitchStatus("单独派遣");
+        var 仅寻找当前位置 = saveSwitchStatus("仅寻找当前位置");
+        var 采集残骸 = saveSwitchStatus("采集残骸");
+        var 舰队残骸 = saveSwitchStatus("舰队残骸");
+        var 水晶残骸 = saveSwitchStatus("水晶残骸");
+        var 合金残骸 = saveSwitchStatus("合金残骸");
+        var 快速维修 = saveSwitchStatus("快速维修");
 
         var data = {
             攻击舰队: 攻击舰队,
@@ -478,19 +822,26 @@
             快速维修: 快速维修,
         };
 
-        return data
+        return data;
     }
 
     function submit() {
-<!--        console.log("点击了确定");-->
         isAutoClicked = true;
-        data = saveAllItems()
-        // 将data 转为JSON文件传递给PY
+        if (autoClickIntervalId) {
+            clearInterval(autoClickIntervalId);
+            autoClickIntervalId = null;
+        }
+        var data = saveAllItems();
         airscript.call("submit", JSON.stringify(data));
         airscript.close();
     }
 
     function wclose() {
+        isAutoClicked = true;
+        if (autoClickIntervalId) {
+            clearInterval(autoClickIntervalId);
+            autoClickIntervalId = null;
+        }
         var guan = document.getElementById("guanbi").value;
         airscript.call("guan", guan);
         console.log("退出程序" + guan);
@@ -499,5 +850,4 @@
 </script>
 
 </body>
-
 </html>
