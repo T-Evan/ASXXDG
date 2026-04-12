@@ -287,6 +287,9 @@ def 执行残骸采集(已处理残骸坐标):
         if 功能开关["合金残骸"] == 1:
             Toast("寻找合金残骸")
             当前残骸模板.extend(合金残骸目标模板)
+        if 功能开关["天启残骸"] == 1:
+            Toast("寻找天启残骸")
+            当前残骸模板.extend(天启残骸目标模板)
         当前残骸目标 = 查找未处理目标("残骸", 当前残骸模板, 已处理残骸坐标)
         if 当前残骸目标:
             点击目标(当前残骸目标)
@@ -616,17 +619,28 @@ def 选择舰队攻击(fightType=""):
             TomatoOcrTap(611, 414, 671, 445, "确定")
     Toast("选择舰队")
     if 功能开关["智能分配"] == 1:
-        re, _, _ = TomatoOcrFindRange(
-            "母港", x1=994, y1=37, x2=1262, y2=677, match_mode="fuzzy"
-        )
-        if not re:
-            re, _, _ = TomatoOcrFindRange(
+        if fightType == "清道夫舰队":
+            count = TomatoOcrCountRange(
                 "悬停", x1=994, y1=37, x2=1262, y2=677, match_mode="fuzzy"
             )
-        if not re:
-            Toast("无可用舰队")
-            sleep(0.5)
-            return False
+            if count < 2:
+                Toast("无可用舰队")
+                sleep(0.5)
+                tapSleep(511,62)
+                return False
+        else:
+            re, _, _ = TomatoOcrFindRange(
+                "母港", x1=994, y1=37, x2=1262, y2=677, match_mode="fuzzy"
+            )
+            if not re:
+                re, _, _ = TomatoOcrFindRange(
+                    "悬停", x1=994, y1=37, x2=1262, y2=677, match_mode="fuzzy"
+                )
+            if not re:
+                Toast("无可用舰队")
+                sleep(0.5)
+                tapSleep(511,62)
+                return False
 
         if fightType == "清道夫战斗群":
             Toast("精英，第一舰队攻击")
@@ -645,7 +659,7 @@ def 选择舰队攻击(fightType=""):
             )
             re = CompareColors.compare("794,137,#C5E6FF|797,140,#C4E5FE")
             if re:
-                tapSleep(1008, 140, 1.2)  # 点击第一舰队取消
+                tapSleep(1008, 140, 1)  # 点击第一舰队取消
     elif 功能开关["全部舰队"] == 1:
         Toast("全部舰队")
         re, _, _ = TomatoOcrFindRange(
@@ -657,6 +671,7 @@ def 选择舰队攻击(fightType=""):
             )
         if not re:
             Toast("无可用舰队")
+            tapSleep(511,62)
             return False
         re = TomatoOcrTap(662, 620, 748, 651, "选择全部", offsetX=5, offsetY=8)
         if not re:
@@ -682,6 +697,7 @@ def 选择舰队攻击(fightType=""):
             )
         if not re:
             Toast("无可用舰队")
+            tapSleep(511,62)
             return False
 
         re = TomatoOcrFindRangeClick(

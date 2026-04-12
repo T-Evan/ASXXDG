@@ -243,7 +243,8 @@
             position: relative;
         }
 
-        .checkbox-item input[type="checkbox"] {
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
             appearance: none;
             -webkit-appearance: none;
             width: 16px;
@@ -258,7 +259,16 @@
             flex-shrink: 0;
         }
 
-        .checkbox-item input[type="checkbox"]:checked {
+        .checkbox-item input[type="radio"] {
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.08) 0%, rgba(0, 212, 255, 0.03) 58%, rgba(0, 212, 255, 0) 100%),
+                rgba(0, 212, 255, 0.06);
+            box-shadow: inset 0 0 6px rgba(0, 212, 255, 0.08);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked,
+        .checkbox-item input[type="radio"]:checked {
             background: rgba(0, 212, 255, 0.25);
             border-color: var(--accent-cyan);
             box-shadow: 0 0 8px rgba(0, 212, 255, 0.35);
@@ -276,7 +286,21 @@
             transform: rotate(45deg);
         }
 
-        .checkbox-item input[type="checkbox"]:focus {
+        .checkbox-item input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(151, 245, 255, 1) 0%, rgba(0, 212, 255, 0.92) 58%, rgba(0, 212, 255, 0.28) 100%);
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+        }
+
+        .checkbox-item input[type="checkbox"]:focus,
+        .checkbox-item input[type="radio"]:focus {
             outline: none;
             box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
         }
@@ -293,7 +317,8 @@
             color: var(--accent-cyan);
         }
 
-        .checkbox-item:hover input[type="checkbox"] {
+        .checkbox-item:hover input[type="checkbox"],
+        .checkbox-item:hover input[type="radio"] {
             border-color: var(--accent-cyan);
             box-shadow: 0 0 6px rgba(0, 212, 255, 0.25);
         }
@@ -514,15 +539,15 @@
                 </div>
                 <div class="checkbox-row">
                     <div class="checkbox-item">
-                        <input id="全部舰队" name="vehicle" type="checkbox" value="Bike">
+                        <input id="全部舰队" name="fleetDispatchMode" type="radio" value="全部舰队">
                         <label for="全部舰队">全部舰队</label>
                     </div>
                     <div class="checkbox-item">
-                        <input id="单独派遣" name="vehicle" type="checkbox" value="Bike">
+                        <input id="单独派遣" name="fleetDispatchMode" type="radio" value="单独派遣">
                         <label for="单独派遣">单独派遣</label>
                     </div>
                     <div class="checkbox-item">
-                        <input id="智能分配" name="vehicle" type="checkbox" value="Bike">
+                        <input id="智能分配" name="fleetDispatchMode" type="radio" value="智能分配">
                         <label for="智能分配">智能分配</label>
                     </div>
                 </div>
@@ -558,6 +583,10 @@
                         <div class="checkbox-item">
                             <input id="合金残骸" name="vehicle" type="checkbox" value="Bike">
                             <label for="合金残骸">合金残骸</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input id="天启残骸" name="vehicle" type="checkbox" value="Bike">
+                            <label for="天启残骸">天启残骸</label>
                         </div>
                     </div>
                 </div>
@@ -739,18 +768,60 @@
         }
     }
 
+    function setSingleChoiceGroup(ids, defaultId) {
+        var selectedId = null;
+
+        ids.forEach(function(id) {
+            if (localStorage.getItem(id) === "true") {
+                selectedId = id;
+            }
+        });
+
+        if (!selectedId) {
+            selectedId = defaultId;
+        }
+
+        ids.forEach(function(id) {
+            var isSelected = id === selectedId;
+            var element = document.getElementById(id);
+            if (element) {
+                element.checked = isSelected;
+            }
+            localStorage.setItem(id, isSelected);
+        });
+    }
+
+    function saveSingleChoiceGroup(ids, defaultId) {
+        var selectedId = defaultId;
+
+        ids.forEach(function(id) {
+            var element = document.getElementById(id);
+            if (element && element.checked) {
+                selectedId = id;
+            }
+        });
+
+        var result = {};
+        ids.forEach(function(id) {
+            var isSelected = id === selectedId;
+            localStorage.setItem(id, isSelected);
+            result[id] = isSelected;
+        });
+
+        return result;
+    }
+
     function setAllItems() {
         setSwitchStatus("攻击舰队");
         setSwitchStatus("清道夫舰队");
         setSwitchStatus("清道夫战斗群");
-        setSwitchStatus("全部舰队");
-        setSwitchStatus("智能分配");
-        setSwitchStatus("单独派遣");
+        setSingleChoiceGroup(["全部舰队", "单独派遣", "智能分配"], "单独派遣");
         setSwitchStatus("仅寻找当前位置");
         setSwitchStatus("采集残骸");
         setSwitchStatus("舰队残骸");
         setSwitchStatus("水晶残骸");
         setSwitchStatus("合金残骸");
+        setSwitchStatus("天启残骸");
         setSwitchStatus("快速维修");
     }
 
@@ -797,14 +868,16 @@
         var 攻击舰队 = saveSwitchStatus("攻击舰队");
         var 清道夫舰队 = saveSwitchStatus("清道夫舰队");
         var 清道夫战斗群 = saveSwitchStatus("清道夫战斗群");
-        var 全部舰队 = saveSwitchStatus("全部舰队");
-        var 智能分配 = saveSwitchStatus("智能分配");
-        var 单独派遣 = saveSwitchStatus("单独派遣");
+        var 舰队派遣模式 = saveSingleChoiceGroup(["全部舰队", "单独派遣", "智能分配"], "单独派遣");
+        var 全部舰队 = 舰队派遣模式["全部舰队"];
+        var 智能分配 = 舰队派遣模式["智能分配"];
+        var 单独派遣 = 舰队派遣模式["单独派遣"];
         var 仅寻找当前位置 = saveSwitchStatus("仅寻找当前位置");
         var 采集残骸 = saveSwitchStatus("采集残骸");
         var 舰队残骸 = saveSwitchStatus("舰队残骸");
         var 水晶残骸 = saveSwitchStatus("水晶残骸");
         var 合金残骸 = saveSwitchStatus("合金残骸");
+        var 天启残骸 = saveSwitchStatus("天启残骸");
         var 快速维修 = saveSwitchStatus("快速维修");
 
         var data = {
@@ -819,6 +892,7 @@
             舰队残骸: 舰队残骸,
             水晶残骸: 水晶残骸,
             合金残骸: 合金残骸,
+            天启残骸: 天启残骸,
             快速维修: 快速维修,
         };
 
