@@ -27,7 +27,10 @@ if display.widthPixels != 1280 or display.heightPixels != 720:
 
 坐标去重网格大小 = 20
 已处理坐标有效时长 = 20
-禁点区域 = (904, 625, 1259, 705)
+禁点区域列表 = [
+    (904, 625, 1259, 705),
+    (4, 427, 79, 586),
+]
 
 残骸目标模板 = [
     {
@@ -480,8 +483,11 @@ def 生成坐标去重键(流程类型, x, y):
 
 
 def 坐标在禁点区域内(x, y):
-    x1, y1, x2, y2 = 禁点区域
-    return x1 <= x <= x2 and y1 <= y <= y2
+    for 禁点区域 in 禁点区域列表:
+        x1, y1, x2, y2 = 禁点区域
+        if x1 <= x <= x2 and y1 <= y <= y2:
+            return True
+    return False
 
 
 def 查找未处理目标(流程类型, 模板列表, 已处理坐标):
@@ -715,7 +721,7 @@ def main():
                 # 定位空间站，优先寻找空间站附近目标
                 re1 = imageFindClick(
                     "空间站",
-                    confidence1=0.8,
+                    confidence1=0.85,
                     offsetX=2,
                     offsetY=2,
                     x1=97,
@@ -727,7 +733,19 @@ def main():
                 if not re1:
                     re1 = imageFindClick(
                         "空间站2",
-                        confidence1=0.8,
+                        confidence1=0.85,
+                        offsetX=2,
+                        offsetY=2,
+                        x1=97,
+                        y1=168,
+                        x2=1162,
+                        y2=634,
+                        rgb=True,
+                    )
+                if not re1:
+                    re1 = imageFindClick(
+                        "空间站3",
+                        confidence1=0.85,
                         offsetX=2,
                         offsetY=2,
                         x1=97,
