@@ -46,7 +46,7 @@ def 清理干扰弹窗():
     if re:
         Toast("取消前往星系")
         tapSleep(894, 268, 1.5)
-    re, _ = TomatoOcrText(18, 616, 151, 681, "坐标管理", match_mode="fuzzy")
+    re, _ = TomatoOcrText(18, 616, 151, 681, "管理", match_mode="fuzzy")
     if re:
         Toast("关闭坐标管理")
         tapSleep(285, 28, 1.5)
